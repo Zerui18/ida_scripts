@@ -4,9 +4,8 @@ import idaapi
 import idc
 from memory import Pointer
 
-def find_local_var(var_name, size=4) -> Pointer:
-	if size < 1:
-		return None
+def find_local_var(var_name: str) -> Pointer:
+	''' Find a local variable by name when paused in a function frame. '''
 	frame = ida_frame.get_frame(idc.here())
 	loc_var = ida_struct.get_member_by_name(frame, var_name)
 	if (loc_var is None):
@@ -16,8 +15,8 @@ def find_local_var(var_name, size=4) -> Pointer:
 	return Pointer(ea)
 
 def find_symbol(name: str) -> Pointer:
+	''' Find a global symbol by name. '''
 	addr = idc.get_name_ea_simple(name)
-	print(addr)
 	if addr == idc.BADADDR:
 		return None
 	return Pointer(addr)

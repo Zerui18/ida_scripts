@@ -12,6 +12,7 @@ FMT_TO_SIZE = {
 }
 
 IS_64BIT = idaapi.get_inf_structure().is_64bit()
+STR_MAXLEN = 10000
 
 class Pointer:
 	''' Represents an address. '''
@@ -30,7 +31,7 @@ class Pointer:
 		''' Write bytes. '''
 		return idc.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
 
-	def _read_write_with_struct(self, format: str, value: int = None):
+	def read_write_with_struct(self, format: str, value: int = None):
 		''' R/W as integer. '''
 		if value is None:
 			return struct.unpack(format, self.read(FMT_TO_SIZE[format.lower()]))[0]
@@ -38,42 +39,44 @@ class Pointer:
 			return self.write(struct.pack(format, value))
 	
 	def u8(self, value: int = None) -> int:
-		return self._read_write_with_struct('B', value)
+		return self.read_write_with_struct('B', value)
 	
 	def u16(self, value: int = None) -> int:
-		return self._read_write_with_struct('H', value)
+		return self.read_write_with_struct('H', value)
 
 	def u32(self, value: int = None) -> int:
-		return self._read_write_with_struct('I', value)
+		return self.read_write_with_struct('I', value)
 
 	def u64(self, value: int = None) -> int:
-		return self._read_write_with_struct('Q', value)
+		return self.read_write_with_struct('Q', value)
 
 	def s8(self, value: int = None) -> int:
-		return self._read_write_with_struct('b', value)
+		return self.read_write_with_struct('b', value)
 
 	def s16(self, value: int = None) -> int:
-		return self._read_write_with_struct('h', value)
+		return self.read_write_with_struct('h', value)
 
 	def s32(self, value: int = None) -> int:
-		return self._read_write_with_struct('u', value)
+		return self.read_write_with_struct('u', value)
 
 	def s64(self, value: int = None) -> int:
-		return self._read_write_with_struct('q', value)
+		return self.read_write_with_struct('q', value)
 
-	def string(self, value: str = None, read_length: int = None) -> str:
+	def string(self, value: str = None, encoding: str = 'utf-8', read_length: int = None) -> str:
 		''' R/W as string. '''
 		# read
 		if value is None:
 			if read_length is not None:
-				return str(self.read(read_length))
+				return self.read(read_length).decode(encoding)
 			# read null-terminated
 			string = b''
-			while string[-1] != b'\x00':
+			while True:
 				string += self.read(1, len(string))
+				if string[-1] == b'\x00' or len(string) > STR_MAXLEN: break
+			return string.decode(encoding)
 		# write
 		else:
-			self.write(value.encode('utf-8'))
+			self.write(value.encode(encoding))
 
 	def ptr(self, value: 'Pointer' = None) -> 'Pointer':
 		''' R/W as pointer to pointer. '''
@@ -100,3 +103,6 @@ class Pointer:
 		if type(other) is Pointer:
 			other = other.addr
 		return self.addr == other
+
+	def __repr__(self):
+		return f'<Pointer addr = {hex(self.addr)}>'
