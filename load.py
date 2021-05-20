@@ -7,9 +7,9 @@ from ida_scripts.misc import *
 
 try:
 	import idaapi
-	idaapi.require('utils')
-	idaapi.require('memory')
-	idaapi.require('module')
-	idaapi.require('struc')
-	idaapi.require('misc')
+	idaapi.require('ida_scripts.utils')
+	idaapi.require('ida_scripts.memory')
+	idaapi.require('ida_scripts.module')
+	idaapi.require('ida_scripts.struc')
+	idaapi.require('ida_scripts.misc')
 except: pass

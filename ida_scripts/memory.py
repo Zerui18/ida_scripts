@@ -5,6 +5,7 @@ Provides class(es) for interacting with the debugged process's memory.
 try:
 	import idc
 	import idaapi
+	import ida_dbg
 	IS_64BIT = idaapi.get_inf_structure().is_64bit()
 except: pass
 import struct
@@ -26,7 +27,7 @@ class Pointer:
 	''' Represent an address.
 	The `Pointer` class offers convenient access to read/write from a memory address.
 
-	Initialisie a `Pointer` object with `Pointer(addr: int)` or the shorthand `ptr(addr: int)`.
+	Init a `Pointer` object with `Pointer.__init__` or the shorthand `ptr`.
 
 	A `Pointer` object provides convenient functions to read/write certain data types (integers, string, pointer) to its address in memory.
 	These methods take an optional `value` parameter. They read and return the value if `value` is `None`, write and return success/failure as a `bool` when `value` is not None.
@@ -34,9 +35,12 @@ class Pointer:
 	`Pointer` can be added/subtracted from another `Pointer` or `int` to yield a new `Pointer`.
 	'''
 
+	default_string_encoding: str = 'utf-8'
+	''' The default string encoding used by `Pointer.string`. Defaults to `'utf-8'`. '''
+
 	# INIT	
 	def __init__(self, addr: int):
-		''' Initalise with an address. '''
+		''' Init with an address. '''
 		assert type(addr) is int, 'addr can only be int!'
 		self.addr = addr
 
@@ -47,11 +51,11 @@ class Pointer:
 
 	def write(self, bytes: bytes, offset: int = 0) -> bool:
 		''' Write bytes to `self.addr + offset`. '''
-		return idc.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
+		return ida_dbg.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
 
 	# The following methods reads when `value` is None and writes otherwise.
 	def read_write_with_struct(self, format: str, value: int = None) -> Union[int, bool]:
-		''' R/W as integer. '''
+		''' Read/Wwrite an integer. '''
 		if value is None:
 			return struct.unpack(format, self.read(FMT_TO_SIZE[format.lower()]))[0]
 		else:
@@ -89,15 +93,15 @@ class Pointer:
 		''' Read/Write int64. '''
 		return self.read_write_with_struct('q', value)
 
-	def string(self, value: str = None, encoding: str = 'utf-8', read_length: int = None) -> Union[str, bool]:
+	def string(self, value: str = None, encoding: str = None, read_length: int = None) -> Union[str, bool]:
 		''' Read/Write string, optionally specifying a custom encoding and length to read.
 		
 		Parameters
 		----------
 		value : str, default = None
 			Value to be written, the function reads if it's `None`.
-		encoding : str, default = 'utf-8'
-			Encoding to be used for reading/writing.
+		encoding : str, default = None
+			Encoding to be used for reading/writing, specify `None` to use `Pointer.default_string_encoding`.
 		read_length : int, defualt = None
 			Length to read, leave None to read until `\\0`.
 
@@ -106,16 +110,18 @@ class Pointer:
 		`str` or `bool`
 			Either the read string, or a bool indicating whether write succeeded.
 		'''
+		if not encoding:
+			encoding = Pointer.default_string_encoding
 		# read
 		if value is None:
 			if read_length is not None:
-				return self.read(read_length).decode(encoding)
+				return self.read(read_length).decode(encoding, 'backslashreplace')
 			# read null-terminated
 			string = b''
 			while True:
 				string += self.read(1, len(string))
 				if string[-1] == 0 or len(string) > STR_MAXLEN: break
-			return string.decode(encoding)
+			return string.decode(encoding, 'backslashreplace')
 		# write
 		else:
 			self.write(value.encode(encoding))

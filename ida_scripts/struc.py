@@ -151,12 +151,31 @@ class StrucI:
 		members = self.struc_t.members
 		return { m.name: m.instance_at_struct(self.addr) for m in members }
 
-	def __getitem__(self, name: str):
-		''' Get a member's value by its name. '''
+	def member(self, name: str, return_pointer: bool = True):
+		''' Get a member's value or `Pointer` by its name. '''
 		member = self.struc_t[name]
 		if not member:
 			return None
-		return member.instance_at_struct(self.addr)
+		return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)
+
+	def __getitem__(self, name: str):
+		''' Get a member's value by its name. '''
+		return self.member(name)
+
+	def __setitem__(self, name: str, value) -> bool:
+		''' Set a member's value by its name. '''
+		member_ptr: Pointer = self.member(name)
+		assert member_ptr, f'Cannot find member {name} for struct {self.struc_t}!'
+		if type(value) is str:
+			member_ptr.string()
+		# treat everthing else as int
+		else:
+			assert not dtype.is_floating(), 'FP not supported yet!'
+			signed = dtype.is_signed()
+			length = dtype.get_size() * 8
+			method = f'{"s" if signed else "u"}{length}'
+			assert hasattr(addr, method), f'Cannot find method {method}, it is likely not supported.'
+			return getattr(addr, method)()
 
 	def __repr__(self):
 		return f'<StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}>'

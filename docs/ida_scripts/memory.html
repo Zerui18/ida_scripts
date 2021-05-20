@@ -34,6 +34,7 @@ Provides class(es) for interacting with the debugged process&#39;s memory.
 try:
         import idc
         import idaapi
+        import ida_dbg
         IS_64BIT = idaapi.get_inf_structure().is_64bit()
 except: pass
 import struct
@@ -55,7 +56,7 @@ class Pointer:
         &#39;&#39;&#39; Represent an address.
         The `Pointer` class offers convenient access to read/write from a memory address.
 
-        Initialisie a `Pointer` object with `Pointer(addr: int)` or the shorthand `ptr(addr: int)`.
+        Init a `Pointer` object with `Pointer.__init__` or the shorthand `ptr`.
 
         A `Pointer` object provides convenient functions to read/write certain data types (integers, string, pointer) to its address in memory.
         These methods take an optional `value` parameter. They read and return the value if `value` is `None`, write and return success/failure as a `bool` when `value` is not None.
@@ -63,9 +64,12 @@ class Pointer:
         `Pointer` can be added/subtracted from another `Pointer` or `int` to yield a new `Pointer`.
         &#39;&#39;&#39;
 
+        default_string_encoding: str = &#39;utf-8&#39;
+        &#39;&#39;&#39; The default string encoding used by `Pointer.string`. Defaults to `&#39;utf-8&#39;`. &#39;&#39;&#39;
+
         # INIT  
         def __init__(self, addr: int):
-                &#39;&#39;&#39; Initalise with an address. &#39;&#39;&#39;
+                &#39;&#39;&#39; Init with an address. &#39;&#39;&#39;
                 assert type(addr) is int, &#39;addr can only be int!&#39;
                 self.addr = addr
 
@@ -76,11 +80,11 @@ class Pointer:
 
         def write(self, bytes: bytes, offset: int = 0) -&gt; bool:
                 &#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;
-                return idc.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
+                return ida_dbg.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
 
         # The following methods reads when `value` is None and writes otherwise.
         def read_write_with_struct(self, format: str, value: int = None) -&gt; Union[int, bool]:
-                &#39;&#39;&#39; R/W as integer. &#39;&#39;&#39;
+                &#39;&#39;&#39; Read/Wwrite an integer. &#39;&#39;&#39;
                 if value is None:
                         return struct.unpack(format, self.read(FMT_TO_SIZE[format.lower()]))[0]
                 else:
@@ -118,15 +122,15 @@ class Pointer:
                 &#39;&#39;&#39; Read/Write int64. &#39;&#39;&#39;
                 return self.read_write_with_struct(&#39;q&#39;, value)
 
-        def string(self, value: str = None, encoding: str = &#39;utf-8&#39;, read_length: int = None) -&gt; Union[str, bool]:
+        def string(self, value: str = None, encoding: str = None, read_length: int = None) -&gt; Union[str, bool]:
                 &#39;&#39;&#39; Read/Write string, optionally specifying a custom encoding and length to read.
                 
                 Parameters
                 ----------
                 value : str, default = None
                         Value to be written, the function reads if it&#39;s `None`.
-                encoding : str, default = &#39;utf-8&#39;
-                        Encoding to be used for reading/writing.
+                encoding : str, default = None
+                        Encoding to be used for reading/writing, specify `None` to use `Pointer.default_string_encoding`.
                 read_length : int, defualt = None
                         Length to read, leave None to read until `\\0`.
 
@@ -135,16 +139,18 @@ class Pointer:
                 `str` or `bool`
                         Either the read string, or a bool indicating whether write succeeded.
                 &#39;&#39;&#39;
+                if not encoding:
+                        encoding = Pointer.default_string_encoding
                 # read
                 if value is None:
                         if read_length is not None:
-                                return self.read(read_length).decode(encoding)
+                                return self.read(read_length).decode(encoding, &#39;backslashreplace&#39;)
                         # read null-terminated
                         string = b&#39;&#39;
                         while True:
                                 string += self.read(1, len(string))
                                 if string[-1] == 0 or len(string) &gt; STR_MAXLEN: break
-                        return string.decode(encoding)
+                        return string.decode(encoding, &#39;backslashreplace&#39;)
                 # write
                 else:
                         self.write(value.encode(encoding))
@@ -232,11 +238,11 @@ def ptr(addr: int) -&gt; Pointer:
 <dd>
 <div class="desc"><p>Represent an address.
 The <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> class offers convenient access to read/write from a memory address.</p>
-<p>Initialisie a <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> object with <code>Pointer(addr: int)</code> or the shorthand <code>ptr(addr: int)</code>.</p>
+<p>Init a <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> object with <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> or the shorthand <code><a title="ida_scripts.memory.ptr" href="#ida_scripts.memory.ptr">ptr()</a></code>.</p>
 <p>A <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> object provides convenient functions to read/write certain data types (integers, string, pointer) to its address in memory.
 These methods take an optional <code>value</code> parameter. They read and return the value if <code>value</code> is <code>None</code>, write and return success/failure as a <code>bool</code> when <code>value</code> is not None.</p>
 <p><code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> can be added/subtracted from another <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code> or <code>int</code> to yield a new <code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code>.</p>
-<p>Initalise with an address.</p></div>
+<p>Init with an address.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -245,7 +251,7 @@ These methods take an optional <code>value</code> parameter. They read and retur
         &#39;&#39;&#39; Represent an address.
         The `Pointer` class offers convenient access to read/write from a memory address.
 
-        Initialisie a `Pointer` object with `Pointer(addr: int)` or the shorthand `ptr(addr: int)`.
+        Init a `Pointer` object with `Pointer.__init__` or the shorthand `ptr`.
 
         A `Pointer` object provides convenient functions to read/write certain data types (integers, string, pointer) to its address in memory.
         These methods take an optional `value` parameter. They read and return the value if `value` is `None`, write and return success/failure as a `bool` when `value` is not None.
@@ -253,9 +259,12 @@ These methods take an optional <code>value</code> parameter. They read and retur
         `Pointer` can be added/subtracted from another `Pointer` or `int` to yield a new `Pointer`.
         &#39;&#39;&#39;
 
+        default_string_encoding: str = &#39;utf-8&#39;
+        &#39;&#39;&#39; The default string encoding used by `Pointer.string`. Defaults to `&#39;utf-8&#39;`. &#39;&#39;&#39;
+
         # INIT  
         def __init__(self, addr: int):
-                &#39;&#39;&#39; Initalise with an address. &#39;&#39;&#39;
+                &#39;&#39;&#39; Init with an address. &#39;&#39;&#39;
                 assert type(addr) is int, &#39;addr can only be int!&#39;
                 self.addr = addr
 
@@ -266,11 +275,11 @@ These methods take an optional <code>value</code> parameter. They read and retur
 
         def write(self, bytes: bytes, offset: int = 0) -&gt; bool:
                 &#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;
-                return idc.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
+                return ida_dbg.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
 
         # The following methods reads when `value` is None and writes otherwise.
         def read_write_with_struct(self, format: str, value: int = None) -&gt; Union[int, bool]:
-                &#39;&#39;&#39; R/W as integer. &#39;&#39;&#39;
+                &#39;&#39;&#39; Read/Wwrite an integer. &#39;&#39;&#39;
                 if value is None:
                         return struct.unpack(format, self.read(FMT_TO_SIZE[format.lower()]))[0]
                 else:
@@ -308,15 +317,15 @@ These methods take an optional <code>value</code> parameter. They read and retur
                 &#39;&#39;&#39; Read/Write int64. &#39;&#39;&#39;
                 return self.read_write_with_struct(&#39;q&#39;, value)
 
-        def string(self, value: str = None, encoding: str = &#39;utf-8&#39;, read_length: int = None) -&gt; Union[str, bool]:
+        def string(self, value: str = None, encoding: str = None, read_length: int = None) -&gt; Union[str, bool]:
                 &#39;&#39;&#39; Read/Write string, optionally specifying a custom encoding and length to read.
                 
                 Parameters
                 ----------
                 value : str, default = None
                         Value to be written, the function reads if it&#39;s `None`.
-                encoding : str, default = &#39;utf-8&#39;
-                        Encoding to be used for reading/writing.
+                encoding : str, default = None
+                        Encoding to be used for reading/writing, specify `None` to use `Pointer.default_string_encoding`.
                 read_length : int, defualt = None
                         Length to read, leave None to read until `\\0`.
 
@@ -325,16 +334,18 @@ These methods take an optional <code>value</code> parameter. They read and retur
                 `str` or `bool`
                         Either the read string, or a bool indicating whether write succeeded.
                 &#39;&#39;&#39;
+                if not encoding:
+                        encoding = Pointer.default_string_encoding
                 # read
                 if value is None:
                         if read_length is not None:
-                                return self.read(read_length).decode(encoding)
+                                return self.read(read_length).decode(encoding, &#39;backslashreplace&#39;)
                         # read null-terminated
                         string = b&#39;&#39;
                         while True:
                                 string += self.read(1, len(string))
                                 if string[-1] == 0 or len(string) &gt; STR_MAXLEN: break
-                        return string.decode(encoding)
+                        return string.decode(encoding, &#39;backslashreplace&#39;)
                 # write
                 else:
                         self.write(value.encode(encoding))
@@ -384,6 +395,13 @@ These methods take an optional <code>value</code> parameter. They read and retur
         def __repr__(self):
                 return f&#39;*{hex(self.addr)}&#39;</code></pre>
 </details>
+<h3>Class variables</h3>
+<dl>
+<dt id="ida_scripts.memory.Pointer.default_string_encoding"><code class="name">var <span class="ident">default_string_encoding</span> : str</code></dt>
+<dd>
+<div class="desc"><p>The default string encoding used by <code><a title="ida_scripts.memory.Pointer.string" href="#ida_scripts.memory.Pointer.string">Pointer.string()</a></code>. Defaults to <code>'utf-8'</code>.</p></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="ida_scripts.memory.Pointer.add"><code class="name flex">
@@ -465,13 +483,13 @@ These methods take an optional <code>value</code> parameter. They read and retur
 <span>def <span class="ident">read_write_with_struct</span></span>(<span>self, format: str, value: int = None) ‑> Union[int, bool]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>R/W as integer.</p></div>
+<div class="desc"><p>Read/Wwrite an integer.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def read_write_with_struct(self, format: str, value: int = None) -&gt; Union[int, bool]:
-        &#39;&#39;&#39; R/W as integer. &#39;&#39;&#39;
+        &#39;&#39;&#39; Read/Wwrite an integer. &#39;&#39;&#39;
         if value is None:
                 return struct.unpack(format, self.read(FMT_TO_SIZE[format.lower()]))[0]
         else:
@@ -535,7 +553,7 @@ These methods take an optional <code>value</code> parameter. They read and retur
 </details>
 </dd>
 <dt id="ida_scripts.memory.Pointer.string"><code class="name flex">
-<span>def <span class="ident">string</span></span>(<span>self, value: str = None, encoding: str = 'utf-8', read_length: int = None) ‑> Union[str, bool]</span>
+<span>def <span class="ident">string</span></span>(<span>self, value: str = None, encoding: str = None, read_length: int = None) ‑> Union[str, bool]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Read/Write string, optionally specifying a custom encoding and length to read.</p>
@@ -543,8 +561,8 @@ These methods take an optional <code>value</code> parameter. They read and retur
 <dl>
 <dt><strong><code>value</code></strong> :&ensp;<code>str</code>, default <code>= None</code></dt>
 <dd>Value to be written, the function reads if it's <code>None</code>.</dd>
-<dt><strong><code>encoding</code></strong> :&ensp;<code>str</code>, default <code>= 'utf-8'</code></dt>
-<dd>Encoding to be used for reading/writing.</dd>
+<dt><strong><code>encoding</code></strong> :&ensp;<code>str</code>, default <code>= None</code></dt>
+<dd>Encoding to be used for reading/writing, specify <code>None</code> to use <code><a title="ida_scripts.memory.Pointer.default_string_encoding" href="#ida_scripts.memory.Pointer.default_string_encoding">Pointer.default_string_encoding</a></code>.</dd>
 <dt><strong><code>read_length</code></strong> :&ensp;<code>int, defualt = None</code></dt>
 <dd>Length to read, leave None to read until <code>\0</code>.</dd>
 </dl>
@@ -555,15 +573,15 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def string(self, value: str = None, encoding: str = &#39;utf-8&#39;, read_length: int = None) -&gt; Union[str, bool]:
+<pre><code class="python">def string(self, value: str = None, encoding: str = None, read_length: int = None) -&gt; Union[str, bool]:
         &#39;&#39;&#39; Read/Write string, optionally specifying a custom encoding and length to read.
         
         Parameters
         ----------
         value : str, default = None
                 Value to be written, the function reads if it&#39;s `None`.
-        encoding : str, default = &#39;utf-8&#39;
-                Encoding to be used for reading/writing.
+        encoding : str, default = None
+                Encoding to be used for reading/writing, specify `None` to use `Pointer.default_string_encoding`.
         read_length : int, defualt = None
                 Length to read, leave None to read until `\\0`.
 
@@ -572,16 +590,18 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
         `str` or `bool`
                 Either the read string, or a bool indicating whether write succeeded.
         &#39;&#39;&#39;
+        if not encoding:
+                encoding = Pointer.default_string_encoding
         # read
         if value is None:
                 if read_length is not None:
-                        return self.read(read_length).decode(encoding)
+                        return self.read(read_length).decode(encoding, &#39;backslashreplace&#39;)
                 # read null-terminated
                 string = b&#39;&#39;
                 while True:
                         string += self.read(1, len(string))
                         if string[-1] == 0 or len(string) &gt; STR_MAXLEN: break
-                return string.decode(encoding)
+                return string.decode(encoding, &#39;backslashreplace&#39;)
         # write
         else:
                 self.write(value.encode(encoding))</code></pre>
@@ -667,7 +687,7 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
 </summary>
 <pre><code class="python">def write(self, bytes: bytes, offset: int = 0) -&gt; bool:
         &#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;
-        return idc.write_dbg_memory(self.addr + offset, bytes) == len(bytes)</code></pre>
+        return ida_dbg.write_dbg_memory(self.addr + offset, bytes) == len(bytes)</code></pre>
 </details>
 </dd>
 </dl>
@@ -697,6 +717,7 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
 <h4><code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code></h4>
 <ul class="">
 <li><code><a title="ida_scripts.memory.Pointer.add" href="#ida_scripts.memory.Pointer.add">add</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.default_string_encoding" href="#ida_scripts.memory.Pointer.default_string_encoding">default_string_encoding</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.hexdump" href="#ida_scripts.memory.Pointer.hexdump">hexdump</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.hexdump_str" href="#ida_scripts.memory.Pointer.hexdump_str">hexdump_str</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.ptr" href="#ida_scripts.memory.Pointer.ptr">ptr</a></code></li>

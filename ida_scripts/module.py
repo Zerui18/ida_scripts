@@ -31,6 +31,3 @@ class Module:
 	def __init__(self, addr: int):
 		self.name = idc.get_module_name(addr)
 		self.addr = addr
-
-	# def __repr__(self):
-	# 	return f'<Module name={self.name}, addr={hex(self.addr)}>'

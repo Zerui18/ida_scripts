@@ -180,12 +180,31 @@ class StrucI:
                 members = self.struc_t.members
                 return { m.name: m.instance_at_struct(self.addr) for m in members }
 
-        def __getitem__(self, name: str):
-                &#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;
+        def member(self, name: str, return_pointer: bool = True):
+                &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
                 member = self.struc_t[name]
                 if not member:
                         return None
-                return member.instance_at_struct(self.addr)
+                return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)
+
+        def __getitem__(self, name: str):
+                &#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;
+                return self.member(name)
+
+        def __setitem__(self, name: str, value) -&gt; bool:
+                &#39;&#39;&#39; Set a member&#39;s value by its name. &#39;&#39;&#39;
+                member_ptr: Pointer = self.member(name)
+                assert member_ptr, f&#39;Cannot find member {name} for struct {self.struc_t}!&#39;
+                if type(value) is str:
+                        member_ptr.string()
+                # treat everthing else as int
+                else:
+                        assert not dtype.is_floating(), &#39;FP not supported yet!&#39;
+                        signed = dtype.is_signed()
+                        length = dtype.get_size() * 8
+                        method = f&#39;{&#34;s&#34; if signed else &#34;u&#34;}{length}&#39;
+                        assert hasattr(addr, method), f&#39;Cannot find method {method}, it is likely not supported.&#39;
+                        return getattr(addr, method)()
 
         def __repr__(self):
                 return f&#39;&lt;StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}&gt;&#39;</code></pre>
@@ -473,12 +492,31 @@ The parsed value.</p></div>
                 members = self.struc_t.members
                 return { m.name: m.instance_at_struct(self.addr) for m in members }
 
-        def __getitem__(self, name: str):
-                &#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;
+        def member(self, name: str, return_pointer: bool = True):
+                &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
                 member = self.struc_t[name]
                 if not member:
                         return None
-                return member.instance_at_struct(self.addr)
+                return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)
+
+        def __getitem__(self, name: str):
+                &#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;
+                return self.member(name)
+
+        def __setitem__(self, name: str, value) -&gt; bool:
+                &#39;&#39;&#39; Set a member&#39;s value by its name. &#39;&#39;&#39;
+                member_ptr: Pointer = self.member(name)
+                assert member_ptr, f&#39;Cannot find member {name} for struct {self.struc_t}!&#39;
+                if type(value) is str:
+                        member_ptr.string()
+                # treat everthing else as int
+                else:
+                        assert not dtype.is_floating(), &#39;FP not supported yet!&#39;
+                        signed = dtype.is_signed()
+                        length = dtype.get_size() * 8
+                        method = f&#39;{&#34;s&#34; if signed else &#34;u&#34;}{length}&#39;
+                        assert hasattr(addr, method), f&#39;Cannot find method {method}, it is likely not supported.&#39;
+                        return getattr(addr, method)()
 
         def __repr__(self):
                 return f&#39;&lt;StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}&gt;&#39;</code></pre>
@@ -506,6 +544,26 @@ def members(self) -&gt; Dict[str, Any]:
 <dt id="ida_scripts.struc.StrucI.struc_t"><code class="name">var <span class="ident">struc_t</span></code></dt>
 <dd>
 <div class="desc"><p>The type definition of this struct.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ida_scripts.struc.StrucI.member"><code class="name flex">
+<span>def <span class="ident">member</span></span>(<span>self, name: str, return_pointer: bool = True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get a member's value or <code>Pointer</code> by its name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def member(self, name: str, return_pointer: bool = True):
+        &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
+        member = self.struc_t[name]
+        if not member:
+                return None
+        return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)</code></pre>
+</details>
 </dd>
 </dl>
 </dd>
@@ -687,6 +745,7 @@ def size(self) -&gt; int:
 <h4><code><a title="ida_scripts.struc.StrucI" href="#ida_scripts.struc.StrucI">StrucI</a></code></h4>
 <ul class="">
 <li><code><a title="ida_scripts.struc.StrucI.addr" href="#ida_scripts.struc.StrucI.addr">addr</a></code></li>
+<li><code><a title="ida_scripts.struc.StrucI.member" href="#ida_scripts.struc.StrucI.member">member</a></code></li>
 <li><code><a title="ida_scripts.struc.StrucI.members" href="#ida_scripts.struc.StrucI.members">members</a></code></li>
 <li><code><a title="ida_scripts.struc.StrucI.struc_t" href="#ida_scripts.struc.StrucI.struc_t">struc_t</a></code></li>
 </ul>
