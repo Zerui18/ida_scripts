@@ -1,7 +1,11 @@
-import idc
+''' Provides class(es) for interacing with modules. '''
+
+try:
+	import idc
+except: pass
 from typing import *
 
-from utils import *
+from .utils import *
 
 @auto_repr(['name', 'addr'], { 'addr' : hex })
 class Module:
