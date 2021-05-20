@@ -1,6 +1,9 @@
 import idc
 from typing import *
 
+from utils import *
+
+@auto_repr(['name', 'addr'], { 'addr' : hex })
 class Module:
 	''' Represents a single module. '''
 
@@ -8,12 +11,10 @@ class Module:
 	def all_modules() -> List['Module']:
 		''' Return a list of all the modules. '''
 		m = idc.get_first_module()
-		modules = [Module(m)]
-		while True:
+		modules = []
+		while m:
+			modules.append(m)
 			m = idc.get_next_module(m)
-			if m is None:
-				break
-			modules.append(Module(m))
 		return modules
 
 	@staticmethod
@@ -27,5 +28,5 @@ class Module:
 		self.name = idc.get_module_name(addr)
 		self.addr = addr
 
-	def __repr__(self):
-		return f'<Module name = {self.name}, addr = {hex(self.addr)}>'
+	# def __repr__(self):
+	# 	return f'<Module name={self.name}, addr={hex(self.addr)}>'

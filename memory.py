@@ -3,6 +3,8 @@ import idaapi
 import struct
 from typing import *
 
+from utils import *
+
 FMT_TO_SIZE = {
 	'b' : 1,
 	'h' : 2,
@@ -31,6 +33,7 @@ class Pointer:
 		''' Write bytes. '''
 		return idc.write_dbg_memory(self.addr + offset, bytes) == len(bytes)
 
+	# The following methods reads when `value` is None and writes otherwise.
 	def read_write_with_struct(self, format: str, value: int = None):
 		''' R/W as integer. '''
 		if value is None:
@@ -57,7 +60,7 @@ class Pointer:
 		return self.read_write_with_struct('h', value)
 
 	def s32(self, value: int = None) -> int:
-		return self.read_write_with_struct('u', value)
+		return self.read_write_with_struct('i', value)
 
 	def s64(self, value: int = None) -> int:
 		return self.read_write_with_struct('q', value)
@@ -72,7 +75,7 @@ class Pointer:
 			string = b''
 			while True:
 				string += self.read(1, len(string))
-				if string[-1] == b'\x00' or len(string) > STR_MAXLEN: break
+				if string[-1] == 0 or len(string) > STR_MAXLEN: break
 			return string.decode(encoding)
 		# write
 		else:
@@ -87,6 +90,14 @@ class Pointer:
 		# write
 		else:
 			method(value.addr)
+
+	def hexdump_str(self, len: int = 100, offset: int = 0) -> str:
+		''' Generate hexdump from address+offset of specified length. '''
+		return hexdump(self.read(len, offset), start_offset=self.addr)
+
+	def hexdump(self, len: int = 100, offset: int = 0):
+		''' Print hexdump from address+offset of specified length. '''
+		print(self.hexdump_str(len, offset))
 
 	# OPERATORS
 	def __add__(self, other) -> 'Pointer':
@@ -104,5 +115,16 @@ class Pointer:
 			other = other.addr
 		return self.addr == other
 
+	# OPERATOR ALIASES
+	# for chaining
+	def add(self, other) -> 'Pointer':
+		return self + other
+	
+	def sub(self, other) -> 'Pointer':
+		return self - other
+
 	def __repr__(self):
-		return f'<Pointer addr = {hex(self.addr)}>'
+		return f'*{hex(self.addr)}'
+
+def ptr(addr: int) -> Pointer:
+	return Pointer(addr)

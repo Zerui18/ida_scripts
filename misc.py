@@ -2,6 +2,7 @@ import ida_frame
 import ida_struct
 import idaapi
 import idc
+
 from memory import Pointer
 
 def find_local_var(var_name: str) -> Pointer:
