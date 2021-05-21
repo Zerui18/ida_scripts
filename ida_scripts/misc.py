@@ -10,7 +10,7 @@ except: pass
 from .memory import Pointer
 
 def find_local_var(var_name: str) -> Pointer:
-	''' Find a local variable by name when paused in a function frame. `memory.Pointer` '''
+	''' Find a local variable by name when paused in a function frame. '''
 	frame = ida_frame.get_frame(idc.here())
 	loc_var = ida_struct.get_member_by_name(frame, var_name)
 	if (loc_var is None):

@@ -404,67 +404,6 @@ These methods take an optional <code>value</code> parameter. They read and retur
 </dl>
 <h3>Methods</h3>
 <dl>
-<dt id="ida_scripts.memory.Pointer.add"><code class="name flex">
-<span>def <span class="ident">add</span></span>(<span>self, other: Union[ForwardRef('<a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a>'), int]) ‑> <a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def add(self, other: Union[&#39;Pointer&#39;, int]) -&gt; &#39;Pointer&#39;:
-        return self + other</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.hexdump"><code class="name flex">
-<span>def <span class="ident">hexdump</span></span>(<span>self, len: int = 100, offset: int = 0)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Print hexdump from <code>self.addr + offset</code> of specified length.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def hexdump(self, len: int = 100, offset: int = 0):
-        &#39;&#39;&#39; Print hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;
-        print(self.hexdump_str(len, offset))</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.hexdump_str"><code class="name flex">
-<span>def <span class="ident">hexdump_str</span></span>(<span>self, len: int = 100, offset: int = 0) ‑> str</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Generate hexdump from <code>self.addr + offset</code> of specified length.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def hexdump_str(self, len: int = 100, offset: int = 0) -&gt; str:
-        &#39;&#39;&#39; Generate hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;
-        return hexdump(self.read(len, offset), start_offset=self.addr)</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.ptr"><code class="name flex">
-<span>def <span class="ident">ptr</span></span>(<span>self, value: <a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a> = None) ‑> Union[<a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a>, bool]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read/Write pointer.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def ptr(self, value: &#39;Pointer&#39; = None) -&gt; Union[&#39;Pointer&#39;, bool]:
-        &#39;&#39;&#39; Read/Write pointer. &#39;&#39;&#39;
-        method = self.u64 if IS_64BIT else self.u32
-        # read
-        if value is None:
-                return Pointer(method())
-        # write
-        else:
-                method(value.addr)</code></pre>
-</details>
-</dd>
 <dt id="ida_scripts.memory.Pointer.read"><code class="name flex">
 <span>def <span class="ident">read</span></span>(<span>self, size: int, offset: int = 0) ‑> bytes</span>
 </code></dt>
@@ -477,6 +416,20 @@ These methods take an optional <code>value</code> parameter. They read and retur
 <pre><code class="python">def read(self, size: int, offset: int = 0) -&gt; bytes :
         &#39;&#39;&#39; Read bytes from `self.addr + offset` of given size. &#39;&#39;&#39;
         return idc.get_bytes(self.addr + offset, size, True)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.write"><code class="name flex">
+<span>def <span class="ident">write</span></span>(<span>self, bytes: bytes, offset: int = 0) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Write bytes to <code>self.addr + offset</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def write(self, bytes: bytes, offset: int = 0) -&gt; bool:
+        &#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;
+        return ida_dbg.write_dbg_memory(self.addr + offset, bytes) == len(bytes)</code></pre>
 </details>
 </dd>
 <dt id="ida_scripts.memory.Pointer.read_write_with_struct"><code class="name flex">
@@ -494,6 +447,76 @@ These methods take an optional <code>value</code> parameter. They read and retur
                 return struct.unpack(format, self.read(FMT_TO_SIZE[format.lower()]))[0]
         else:
                 return self.write(struct.pack(format, value))</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.u8"><code class="name flex">
+<span>def <span class="ident">u8</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read/Write uint8.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def u8(self, value: int = None) -&gt; Union[int, bool]:
+        &#39;&#39;&#39; Read/Write uint8. &#39;&#39;&#39;
+        return self.read_write_with_struct(&#39;B&#39;, value)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.u16"><code class="name flex">
+<span>def <span class="ident">u16</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read/Write uint16.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def u16(self, value: int = None) -&gt; Union[int, bool]:
+        &#39;&#39;&#39; Read/Write uint16. &#39;&#39;&#39;
+        return self.read_write_with_struct(&#39;H&#39;, value)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.u32"><code class="name flex">
+<span>def <span class="ident">u32</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read/Write uint32.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def u32(self, value: int = None) -&gt; Union[int, bool]:
+        &#39;&#39;&#39; Read/Write uint32. &#39;&#39;&#39;
+        return self.read_write_with_struct(&#39;I&#39;, value)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.u64"><code class="name flex">
+<span>def <span class="ident">u64</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read/Write uint64.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def u64(self, value: int = None) -&gt; Union[int, bool]:
+        &#39;&#39;&#39; Read/Write uint64. &#39;&#39;&#39;
+        return self.read_write_with_struct(&#39;Q&#39;, value)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.s8"><code class="name flex">
+<span>def <span class="ident">s8</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read/Write int8.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def s8(self, value: int = None) -&gt; Union[int, bool]:
+        &#39;&#39;&#39; Read/Write int8. &#39;&#39;&#39;
+        return self.read_write_with_struct(&#39;b&#39;, value)</code></pre>
 </details>
 </dd>
 <dt id="ida_scripts.memory.Pointer.s16"><code class="name flex">
@@ -536,20 +559,6 @@ These methods take an optional <code>value</code> parameter. They read and retur
 <pre><code class="python">def s64(self, value: int = None) -&gt; Union[int, bool]:
         &#39;&#39;&#39; Read/Write int64. &#39;&#39;&#39;
         return self.read_write_with_struct(&#39;q&#39;, value)</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.s8"><code class="name flex">
-<span>def <span class="ident">s8</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read/Write int8.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def s8(self, value: int = None) -&gt; Union[int, bool]:
-        &#39;&#39;&#39; Read/Write int8. &#39;&#39;&#39;
-        return self.read_write_with_struct(&#39;b&#39;, value)</code></pre>
 </details>
 </dd>
 <dt id="ida_scripts.memory.Pointer.string"><code class="name flex">
@@ -607,6 +616,67 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
                 self.write(value.encode(encoding))</code></pre>
 </details>
 </dd>
+<dt id="ida_scripts.memory.Pointer.ptr"><code class="name flex">
+<span>def <span class="ident">ptr</span></span>(<span>self, value: <a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a> = None) ‑> Union[<a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a>, bool]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Read/Write pointer.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ptr(self, value: &#39;Pointer&#39; = None) -&gt; Union[&#39;Pointer&#39;, bool]:
+        &#39;&#39;&#39; Read/Write pointer. &#39;&#39;&#39;
+        method = self.u64 if IS_64BIT else self.u32
+        # read
+        if value is None:
+                return Pointer(method())
+        # write
+        else:
+                method(value.addr)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.hexdump_str"><code class="name flex">
+<span>def <span class="ident">hexdump_str</span></span>(<span>self, len: int = 100, offset: int = 0) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate hexdump from <code>self.addr + offset</code> of specified length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hexdump_str(self, len: int = 100, offset: int = 0) -&gt; str:
+        &#39;&#39;&#39; Generate hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;
+        return hexdump(self.read(len, offset), start_offset=self.addr)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.hexdump"><code class="name flex">
+<span>def <span class="ident">hexdump</span></span>(<span>self, len: int = 100, offset: int = 0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Print hexdump from <code>self.addr + offset</code> of specified length.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def hexdump(self, len: int = 100, offset: int = 0):
+        &#39;&#39;&#39; Print hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;
+        print(self.hexdump_str(len, offset))</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.memory.Pointer.add"><code class="name flex">
+<span>def <span class="ident">add</span></span>(<span>self, other: Union[ForwardRef('<a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a>'), int]) ‑> <a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add(self, other: Union[&#39;Pointer&#39;, int]) -&gt; &#39;Pointer&#39;:
+        return self + other</code></pre>
+</details>
+</dd>
 <dt id="ida_scripts.memory.Pointer.sub"><code class="name flex">
 <span>def <span class="ident">sub</span></span>(<span>self, other: Union[ForwardRef('<a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a>'), int]) ‑> <a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></span>
 </code></dt>
@@ -618,76 +688,6 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
 </summary>
 <pre><code class="python">def sub(self, other: Union[&#39;Pointer&#39;, int]) -&gt; &#39;Pointer&#39;:
         return self - other</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.u16"><code class="name flex">
-<span>def <span class="ident">u16</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read/Write uint16.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def u16(self, value: int = None) -&gt; Union[int, bool]:
-        &#39;&#39;&#39; Read/Write uint16. &#39;&#39;&#39;
-        return self.read_write_with_struct(&#39;H&#39;, value)</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.u32"><code class="name flex">
-<span>def <span class="ident">u32</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read/Write uint32.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def u32(self, value: int = None) -&gt; Union[int, bool]:
-        &#39;&#39;&#39; Read/Write uint32. &#39;&#39;&#39;
-        return self.read_write_with_struct(&#39;I&#39;, value)</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.u64"><code class="name flex">
-<span>def <span class="ident">u64</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read/Write uint64.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def u64(self, value: int = None) -&gt; Union[int, bool]:
-        &#39;&#39;&#39; Read/Write uint64. &#39;&#39;&#39;
-        return self.read_write_with_struct(&#39;Q&#39;, value)</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.u8"><code class="name flex">
-<span>def <span class="ident">u8</span></span>(<span>self, value: int = None) ‑> Union[int, bool]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Read/Write uint8.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def u8(self, value: int = None) -&gt; Union[int, bool]:
-        &#39;&#39;&#39; Read/Write uint8. &#39;&#39;&#39;
-        return self.read_write_with_struct(&#39;B&#39;, value)</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.memory.Pointer.write"><code class="name flex">
-<span>def <span class="ident">write</span></span>(<span>self, bytes: bytes, offset: int = 0) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Write bytes to <code>self.addr + offset</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def write(self, bytes: bytes, offset: int = 0) -&gt; bool:
-        &#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;
-        return ida_dbg.write_dbg_memory(self.addr + offset, bytes) == len(bytes)</code></pre>
 </details>
 </dd>
 </dl>
@@ -716,24 +716,24 @@ Either the read string, or a bool indicating whether write succeeded.</p></div>
 <li>
 <h4><code><a title="ida_scripts.memory.Pointer" href="#ida_scripts.memory.Pointer">Pointer</a></code></h4>
 <ul class="">
-<li><code><a title="ida_scripts.memory.Pointer.add" href="#ida_scripts.memory.Pointer.add">add</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.default_string_encoding" href="#ida_scripts.memory.Pointer.default_string_encoding">default_string_encoding</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.hexdump" href="#ida_scripts.memory.Pointer.hexdump">hexdump</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.hexdump_str" href="#ida_scripts.memory.Pointer.hexdump_str">hexdump_str</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.ptr" href="#ida_scripts.memory.Pointer.ptr">ptr</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.read" href="#ida_scripts.memory.Pointer.read">read</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.write" href="#ida_scripts.memory.Pointer.write">write</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.read_write_with_struct" href="#ida_scripts.memory.Pointer.read_write_with_struct">read_write_with_struct</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.s16" href="#ida_scripts.memory.Pointer.s16">s16</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.s32" href="#ida_scripts.memory.Pointer.s32">s32</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.s64" href="#ida_scripts.memory.Pointer.s64">s64</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.s8" href="#ida_scripts.memory.Pointer.s8">s8</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.string" href="#ida_scripts.memory.Pointer.string">string</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.sub" href="#ida_scripts.memory.Pointer.sub">sub</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.u8" href="#ida_scripts.memory.Pointer.u8">u8</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.u16" href="#ida_scripts.memory.Pointer.u16">u16</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.u32" href="#ida_scripts.memory.Pointer.u32">u32</a></code></li>
 <li><code><a title="ida_scripts.memory.Pointer.u64" href="#ida_scripts.memory.Pointer.u64">u64</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.u8" href="#ida_scripts.memory.Pointer.u8">u8</a></code></li>
-<li><code><a title="ida_scripts.memory.Pointer.write" href="#ida_scripts.memory.Pointer.write">write</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.s8" href="#ida_scripts.memory.Pointer.s8">s8</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.s16" href="#ida_scripts.memory.Pointer.s16">s16</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.s32" href="#ida_scripts.memory.Pointer.s32">s32</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.s64" href="#ida_scripts.memory.Pointer.s64">s64</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.string" href="#ida_scripts.memory.Pointer.string">string</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.ptr" href="#ida_scripts.memory.Pointer.ptr">ptr</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.hexdump_str" href="#ida_scripts.memory.Pointer.hexdump_str">hexdump_str</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.hexdump" href="#ida_scripts.memory.Pointer.hexdump">hexdump</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.add" href="#ida_scripts.memory.Pointer.add">add</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.sub" href="#ida_scripts.memory.Pointer.sub">sub</a></code></li>
+<li><code><a title="ida_scripts.memory.Pointer.default_string_encoding" href="#ida_scripts.memory.Pointer.default_string_encoding">default_string_encoding</a></code></li>
 </ul>
 </li>
 </ul>

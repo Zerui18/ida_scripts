@@ -311,21 +311,6 @@ class StrucI:
 </details>
 <h3>Instance variables</h3>
 <dl>
-<dt id="ida_scripts.struc.MemberT.dtype"><code class="name">var <span class="ident">dtype</span> : ida_typeinf.tinfo_t</code></dt>
-<dd>
-<div class="desc"><p>Member type, represented with <code>ida_typeinf.tinfo_t</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def dtype(self) -&gt; &#39;ida_typeinf.tinfo_t&#39;:
-        &#39;&#39;&#39; Member type, represented with `ida_typeinf.tinfo_t`. &#39;&#39;&#39;
-        tif = ida_typeinf.tinfo_t()
-        ida_struct.get_member_tinfo(tif, self.member)
-        return tif</code></pre>
-</details>
-</dd>
 <dt id="ida_scripts.struc.MemberT.id"><code class="name">var <span class="ident">id</span> : int</code></dt>
 <dd>
 <div class="desc"><p>Member id (mid).</p></div>
@@ -350,6 +335,21 @@ def id(self) -&gt; int:
 def name(self) -&gt; str:
         &#39;&#39;&#39; Member name. &#39;&#39;&#39;
         return ida_struct.get_member_name(self.id)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.struc.MemberT.dtype"><code class="name">var <span class="ident">dtype</span> : ida_typeinf.tinfo_t</code></dt>
+<dd>
+<div class="desc"><p>Member type, represented with <code>ida_typeinf.tinfo_t</code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dtype(self) -&gt; &#39;ida_typeinf.tinfo_t&#39;:
+        &#39;&#39;&#39; Member type, represented with `ida_typeinf.tinfo_t`. &#39;&#39;&#39;
+        tif = ida_typeinf.tinfo_t()
+        ida_struct.get_member_tinfo(tif, self.member)
+        return tif</code></pre>
 </details>
 </dd>
 <dt id="ida_scripts.struc.MemberT.offset"><code class="name">var <span class="ident">offset</span> : int</code></dt>
@@ -465,108 +465,6 @@ The parsed value.</p></div>
 </dd>
 </dl>
 </dd>
-<dt id="ida_scripts.struc.StrucI"><code class="flex name class">
-<span>class <span class="ident">StrucI</span></span>
-<span>(</span><span>addr: <a title="ida_scripts.memory.Pointer" href="memory.html#ida_scripts.memory.Pointer">Pointer</a>, struc_t: <a title="ida_scripts.struc.StrucT" href="#ida_scripts.struc.StrucT">StrucT</a>)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Represent a struct instance. </p>
-<p>Init with a base address and a struct type.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class StrucI:
-        &#39;&#39;&#39; Represent a struct instance. &#39;&#39;&#39;
-
-        def __init__(self, addr: Pointer, struc_t: StrucT):
-                &#39;&#39;&#39; Init with a base address and a struct type. &#39;&#39;&#39;
-                self.addr: Pointer = addr
-                &#39;&#39;&#39; The address of this struct. &#39;&#39;&#39;
-                self.struc_t: StrucT = struc_t
-                &#39;&#39;&#39; The type definition of this struct. &#39;&#39;&#39;
-
-        @property
-        def members(self) -&gt; Dict[str, Any]:
-                &#39;&#39;&#39; Collect all members of this struct as a dict. &#39;&#39;&#39;
-                members = self.struc_t.members
-                return { m.name: m.instance_at_struct(self.addr) for m in members }
-
-        def member(self, name: str, return_pointer: bool = True):
-                &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
-                member = self.struc_t[name]
-                if not member:
-                        return None
-                return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)
-
-        def __getitem__(self, name: str):
-                &#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;
-                return self.member(name)
-
-        def __setitem__(self, name: str, value) -&gt; bool:
-                &#39;&#39;&#39; Set a member&#39;s value by its name. &#39;&#39;&#39;
-                member_ptr: Pointer = self.member(name)
-                assert member_ptr, f&#39;Cannot find member {name} for struct {self.struc_t}!&#39;
-                if type(value) is str:
-                        member_ptr.string()
-                # treat everthing else as int
-                else:
-                        assert not dtype.is_floating(), &#39;FP not supported yet!&#39;
-                        signed = dtype.is_signed()
-                        length = dtype.get_size() * 8
-                        method = f&#39;{&#34;s&#34; if signed else &#34;u&#34;}{length}&#39;
-                        assert hasattr(addr, method), f&#39;Cannot find method {method}, it is likely not supported.&#39;
-                        return getattr(addr, method)()
-
-        def __repr__(self):
-                return f&#39;&lt;StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}&gt;&#39;</code></pre>
-</details>
-<h3>Instance variables</h3>
-<dl>
-<dt id="ida_scripts.struc.StrucI.addr"><code class="name">var <span class="ident">addr</span></code></dt>
-<dd>
-<div class="desc"><p>The address of this struct.</p></div>
-</dd>
-<dt id="ida_scripts.struc.StrucI.members"><code class="name">var <span class="ident">members</span> : Dict[str, Any]</code></dt>
-<dd>
-<div class="desc"><p>Collect all members of this struct as a dict.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def members(self) -&gt; Dict[str, Any]:
-        &#39;&#39;&#39; Collect all members of this struct as a dict. &#39;&#39;&#39;
-        members = self.struc_t.members
-        return { m.name: m.instance_at_struct(self.addr) for m in members }</code></pre>
-</details>
-</dd>
-<dt id="ida_scripts.struc.StrucI.struc_t"><code class="name">var <span class="ident">struc_t</span></code></dt>
-<dd>
-<div class="desc"><p>The type definition of this struct.</p></div>
-</dd>
-</dl>
-<h3>Methods</h3>
-<dl>
-<dt id="ida_scripts.struc.StrucI.member"><code class="name flex">
-<span>def <span class="ident">member</span></span>(<span>self, name: str, return_pointer: bool = True)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Get a member's value or <code>Pointer</code> by its name.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def member(self, name: str, return_pointer: bool = True):
-        &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
-        member = self.struc_t[name]
-        if not member:
-                return None
-        return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
 <dt id="ida_scripts.struc.StrucT"><code class="flex name class">
 <span>class <span class="ident">StrucT</span></span>
 <span>(</span><span>struc: ida_struct.struc_t)</span>
@@ -655,19 +553,6 @@ def id(self) -&gt; int:
         return self.struc.id</code></pre>
 </details>
 </dd>
-<dt id="ida_scripts.struc.StrucT.members"><code class="name">var <span class="ident">members</span> : List[<a title="ida_scripts.struc.MemberT" href="#ida_scripts.struc.MemberT">MemberT</a>]</code></dt>
-<dd>
-<div class="desc"><p>All member types of struct.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@property
-def members(self) -&gt; List[&#39;MemberT&#39;]:
-        &#39;&#39;&#39; All member types of struct. &#39;&#39;&#39;
-        return [MemberT(m) for m in self.struc.members]</code></pre>
-</details>
-</dd>
 <dt id="ida_scripts.struc.StrucT.name"><code class="name">var <span class="ident">name</span> : str</code></dt>
 <dd>
 <div class="desc"><p>Struct name.</p></div>
@@ -679,6 +564,19 @@ def members(self) -&gt; List[&#39;MemberT&#39;]:
 def name(self) -&gt; str:
         &#39;&#39;&#39; Struct name. &#39;&#39;&#39;
         return ida_struct.get_struc_name(self.id)</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.struc.StrucT.members"><code class="name">var <span class="ident">members</span> : List[<a title="ida_scripts.struc.MemberT" href="#ida_scripts.struc.MemberT">MemberT</a>]</code></dt>
+<dd>
+<div class="desc"><p>All member types of struct.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def members(self) -&gt; List[&#39;MemberT&#39;]:
+        &#39;&#39;&#39; All member types of struct. &#39;&#39;&#39;
+        return [MemberT(m) for m in self.struc.members]</code></pre>
 </details>
 </dd>
 <dt id="ida_scripts.struc.StrucT.size"><code class="name">var <span class="ident">size</span> : int</code></dt>
@@ -713,6 +611,108 @@ def size(self) -&gt; int:
 </dd>
 </dl>
 </dd>
+<dt id="ida_scripts.struc.StrucI"><code class="flex name class">
+<span>class <span class="ident">StrucI</span></span>
+<span>(</span><span>addr: <a title="ida_scripts.memory.Pointer" href="memory.html#ida_scripts.memory.Pointer">Pointer</a>, struc_t: <a title="ida_scripts.struc.StrucT" href="#ida_scripts.struc.StrucT">StrucT</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent a struct instance. </p>
+<p>Init with a base address and a struct type.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StrucI:
+        &#39;&#39;&#39; Represent a struct instance. &#39;&#39;&#39;
+
+        def __init__(self, addr: Pointer, struc_t: StrucT):
+                &#39;&#39;&#39; Init with a base address and a struct type. &#39;&#39;&#39;
+                self.addr: Pointer = addr
+                &#39;&#39;&#39; The address of this struct. &#39;&#39;&#39;
+                self.struc_t: StrucT = struc_t
+                &#39;&#39;&#39; The type definition of this struct. &#39;&#39;&#39;
+
+        @property
+        def members(self) -&gt; Dict[str, Any]:
+                &#39;&#39;&#39; Collect all members of this struct as a dict. &#39;&#39;&#39;
+                members = self.struc_t.members
+                return { m.name: m.instance_at_struct(self.addr) for m in members }
+
+        def member(self, name: str, return_pointer: bool = True):
+                &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
+                member = self.struc_t[name]
+                if not member:
+                        return None
+                return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)
+
+        def __getitem__(self, name: str):
+                &#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;
+                return self.member(name)
+
+        def __setitem__(self, name: str, value) -&gt; bool:
+                &#39;&#39;&#39; Set a member&#39;s value by its name. &#39;&#39;&#39;
+                member_ptr: Pointer = self.member(name)
+                assert member_ptr, f&#39;Cannot find member {name} for struct {self.struc_t}!&#39;
+                if type(value) is str:
+                        member_ptr.string()
+                # treat everthing else as int
+                else:
+                        assert not dtype.is_floating(), &#39;FP not supported yet!&#39;
+                        signed = dtype.is_signed()
+                        length = dtype.get_size() * 8
+                        method = f&#39;{&#34;s&#34; if signed else &#34;u&#34;}{length}&#39;
+                        assert hasattr(addr, method), f&#39;Cannot find method {method}, it is likely not supported.&#39;
+                        return getattr(addr, method)()
+
+        def __repr__(self):
+                return f&#39;&lt;StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}&gt;&#39;</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="ida_scripts.struc.StrucI.members"><code class="name">var <span class="ident">members</span> : Dict[str, Any]</code></dt>
+<dd>
+<div class="desc"><p>Collect all members of this struct as a dict.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def members(self) -&gt; Dict[str, Any]:
+        &#39;&#39;&#39; Collect all members of this struct as a dict. &#39;&#39;&#39;
+        members = self.struc_t.members
+        return { m.name: m.instance_at_struct(self.addr) for m in members }</code></pre>
+</details>
+</dd>
+<dt id="ida_scripts.struc.StrucI.addr"><code class="name">var <span class="ident">addr</span></code></dt>
+<dd>
+<div class="desc"><p>The address of this struct.</p></div>
+</dd>
+<dt id="ida_scripts.struc.StrucI.struc_t"><code class="name">var <span class="ident">struc_t</span></code></dt>
+<dd>
+<div class="desc"><p>The type definition of this struct.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ida_scripts.struc.StrucI.member"><code class="name flex">
+<span>def <span class="ident">member</span></span>(<span>self, name: str, return_pointer: bool = True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get a member's value or <code>Pointer</code> by its name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def member(self, name: str, return_pointer: bool = True):
+        &#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;
+        member = self.struc_t[name]
+        if not member:
+                return None
+        return self.addr + member.offset if return_pointer else member.instance_at_struct(self.addr)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
 </dl>
 </section>
 </article>
@@ -732,33 +732,33 @@ def size(self) -&gt; int:
 <li>
 <h4><code><a title="ida_scripts.struc.MemberT" href="#ida_scripts.struc.MemberT">MemberT</a></code></h4>
 <ul class="two-column">
-<li><code><a title="ida_scripts.struc.MemberT.dtype" href="#ida_scripts.struc.MemberT.dtype">dtype</a></code></li>
-<li><code><a title="ida_scripts.struc.MemberT.id" href="#ida_scripts.struc.MemberT.id">id</a></code></li>
 <li><code><a title="ida_scripts.struc.MemberT.instance_at" href="#ida_scripts.struc.MemberT.instance_at">instance_at</a></code></li>
 <li><code><a title="ida_scripts.struc.MemberT.instance_at_struct" href="#ida_scripts.struc.MemberT.instance_at_struct">instance_at_struct</a></code></li>
+<li><code><a title="ida_scripts.struc.MemberT.id" href="#ida_scripts.struc.MemberT.id">id</a></code></li>
 <li><code><a title="ida_scripts.struc.MemberT.name" href="#ida_scripts.struc.MemberT.name">name</a></code></li>
+<li><code><a title="ida_scripts.struc.MemberT.dtype" href="#ida_scripts.struc.MemberT.dtype">dtype</a></code></li>
 <li><code><a title="ida_scripts.struc.MemberT.offset" href="#ida_scripts.struc.MemberT.offset">offset</a></code></li>
 <li><code><a title="ida_scripts.struc.MemberT.size" href="#ida_scripts.struc.MemberT.size">size</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="ida_scripts.struc.StrucI" href="#ida_scripts.struc.StrucI">StrucI</a></code></h4>
-<ul class="">
-<li><code><a title="ida_scripts.struc.StrucI.addr" href="#ida_scripts.struc.StrucI.addr">addr</a></code></li>
-<li><code><a title="ida_scripts.struc.StrucI.member" href="#ida_scripts.struc.StrucI.member">member</a></code></li>
-<li><code><a title="ida_scripts.struc.StrucI.members" href="#ida_scripts.struc.StrucI.members">members</a></code></li>
-<li><code><a title="ida_scripts.struc.StrucI.struc_t" href="#ida_scripts.struc.StrucI.struc_t">struc_t</a></code></li>
 </ul>
 </li>
 <li>
 <h4><code><a title="ida_scripts.struc.StrucT" href="#ida_scripts.struc.StrucT">StrucT</a></code></h4>
 <ul class="two-column">
 <li><code><a title="ida_scripts.struc.StrucT.find_struc" href="#ida_scripts.struc.StrucT.find_struc">find_struc</a></code></li>
-<li><code><a title="ida_scripts.struc.StrucT.id" href="#ida_scripts.struc.StrucT.id">id</a></code></li>
 <li><code><a title="ida_scripts.struc.StrucT.instance_at" href="#ida_scripts.struc.StrucT.instance_at">instance_at</a></code></li>
-<li><code><a title="ida_scripts.struc.StrucT.members" href="#ida_scripts.struc.StrucT.members">members</a></code></li>
+<li><code><a title="ida_scripts.struc.StrucT.id" href="#ida_scripts.struc.StrucT.id">id</a></code></li>
 <li><code><a title="ida_scripts.struc.StrucT.name" href="#ida_scripts.struc.StrucT.name">name</a></code></li>
+<li><code><a title="ida_scripts.struc.StrucT.members" href="#ida_scripts.struc.StrucT.members">members</a></code></li>
 <li><code><a title="ida_scripts.struc.StrucT.size" href="#ida_scripts.struc.StrucT.size">size</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ida_scripts.struc.StrucI" href="#ida_scripts.struc.StrucI">StrucI</a></code></h4>
+<ul class="">
+<li><code><a title="ida_scripts.struc.StrucI.member" href="#ida_scripts.struc.StrucI.member">member</a></code></li>
+<li><code><a title="ida_scripts.struc.StrucI.members" href="#ida_scripts.struc.StrucI.members">members</a></code></li>
+<li><code><a title="ida_scripts.struc.StrucI.addr" href="#ida_scripts.struc.StrucI.addr">addr</a></code></li>
+<li><code><a title="ida_scripts.struc.StrucI.struc_t" href="#ida_scripts.struc.StrucI.struc_t">struc_t</a></code></li>
 </ul>
 </li>
 </ul>
