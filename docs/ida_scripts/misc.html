@@ -39,7 +39,7 @@ except: pass
 from .memory import Pointer
 
 def find_local_var(var_name: str) -&gt; Pointer:
-        &#39;&#39;&#39; Find a local variable by name when paused in a function frame. `memory.Pointer` &#39;&#39;&#39;
+        &#39;&#39;&#39; Find a local variable by name when paused in a function frame. &#39;&#39;&#39;
         frame = ida_frame.get_frame(idc.here())
         loc_var = ida_struct.get_member_by_name(frame, var_name)
         if (loc_var is None):
@@ -67,13 +67,13 @@ def find_symbol(name: str) -&gt; Pointer:
 <span>def <span class="ident">find_local_var</span></span>(<span>var_name: str) ‑> <a title="ida_scripts.memory.Pointer" href="memory.html#ida_scripts.memory.Pointer">Pointer</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Find a local variable by name when paused in a function frame. <code>memory.Pointer</code></p></div>
+<div class="desc"><p>Find a local variable by name when paused in a function frame.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def find_local_var(var_name: str) -&gt; Pointer:
-        &#39;&#39;&#39; Find a local variable by name when paused in a function frame. `memory.Pointer` &#39;&#39;&#39;
+        &#39;&#39;&#39; Find a local variable by name when paused in a function frame. &#39;&#39;&#39;
         frame = ida_frame.get_frame(idc.here())
         loc_var = ida_struct.get_member_by_name(frame, var_name)
         if (loc_var is None):

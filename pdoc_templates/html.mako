@@ -101,6 +101,9 @@
   classes = module.classes(sort=sort_identifiers)
   functions = module.functions(sort=sort_identifiers)
   submodules = module.submodules()
+  # little hack to rearrange the submodules
+  if len(submodules) == 4:
+    submodules = [submodules[i] for i in [0, 3, 2, 1]]
   %>
 
   <%def name="show_func(f)">
@@ -282,6 +285,9 @@
   classes = module.classes(sort=sort_identifiers)
   functions = module.functions(sort=sort_identifiers)
   submodules = module.submodules()
+  # little hack to rearrange the submodules
+  if len(submodules) == 4:
+    submodules = [submodules[i] for i in [0, 3, 2, 1]]
   supermodule = module.supermodule
   %>
   <nav id="sidebar">
