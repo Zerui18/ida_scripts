@@ -105,7 +105,7 @@ class StrucT:
 	def __init__(self, struc: 'ida_struct.struc_t'):
 		''' Init with an `ida_struct.struc_t` object. '''
 		assert type(struc) is ida_struct.struc_t, 'Invalid struc!'
-		self.struc: 'ida_struct.struc_t' = struc
+		self.struc: ida_struct.struc_t = struc
 
 	@property
 	def id(self) -> int:
@@ -118,7 +118,7 @@ class StrucT:
 		return ida_struct.get_struc_name(self.id)
 
 	@property
-	def members(self) -> List['MemberT']:
+	def members(self) -> List[MemberT]:
 		''' All member types of struct. '''
 		return [MemberT(m) for m in self.struc.members]
 

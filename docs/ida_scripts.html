@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="pdoc 7.0.1" />
-    <title>ida_scripts.memory API documentation</title>
+    <title>ida_scripts API documentation</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%2244.5%202.5%2015%2015%22%3E%3Cpath%20d%3D%22M49.351%2021.041c-.233-.721-.546-2.408-.772-4.076-.042-.09-.067-.187-.046-.288-.166-1.347-.277-2.625-.241-3.351-1.378-1.008-2.271-2.586-2.271-4.362%200-.976.272-1.935.788-2.774.057-.094.122-.18.184-.268-.033-.167-.052-.339-.052-.516%200-1.477%201.202-2.679%202.679-2.679.791%200%201.496.352%201.987.9a6.3%206.3%200%200%201%201.001.029c.492-.564%201.207-.929%202.012-.929%201.477%200%202.679%201.202%202.679%202.679a2.65%202.65%200%200%201-.269%201.148c.383.747.595%201.572.595%202.41%200%202.311-1.507%204.29-3.635%205.107.037.699.147%202.27.423%203.294l.137.461c.156%202.136-4.612%205.166-5.199%203.215zm.127-4.919a4.78%204.78%200%200%200%20.775-.584c-.172-.115-.505-.254-.88-.378zm.331%202.302l.828-.502c-.202-.143-.576-.328-.984-.49zm.45%202.157l.701-.403c-.214-.115-.536-.249-.891-.376l.19.779zM49.13%204.141c0%20.152.123.276.276.276s.275-.124.275-.276-.123-.276-.276-.276-.275.124-.275.276zm.735-.389a1.15%201.15%200%200%201%20.314.783%201.16%201.16%200%200%201-1.162%201.162c-.457%200-.842-.27-1.032-.653-.026.117-.042.238-.042.362a1.68%201.68%200%200%200%201.679%201.679%201.68%201.68%200%200%200%201.679-1.679c0-.843-.626-1.535-1.436-1.654zm3.076%201.654a1.68%201.68%200%200%200%201.679%201.679%201.68%201.68%200%200%200%201.679-1.679c0-.037-.009-.072-.011-.109-.21.3-.541.508-.935.508a1.16%201.16%200%200%201-1.162-1.162%201.14%201.14%200%200%201%20.474-.912c-.015%200-.03-.005-.045-.005-.926.001-1.679.754-1.679%201.68zm1.861-1.265c0%20.152.123.276.276.276s.275-.124.275-.276-.123-.276-.276-.276-.275.124-.275.276zm1.823%204.823c0-.52-.103-1.035-.288-1.52-.466.394-1.06.64-1.717.64-1.144%200-2.116-.725-2.499-1.738-.383%201.012-1.355%201.738-2.499%201.738-.867%200-1.631-.421-2.121-1.062-.307.605-.478%201.267-.478%201.942%200%202.486%202.153%204.51%204.801%204.51s4.801-2.023%204.801-4.51zm-3.032%209.156l-.146-.492c-.276-1.02-.395-2.457-.444-3.268a6.11%206.11%200%200%201-1.18.115%206.01%206.01%200%200%201-2.536-.562l.006.175c.802.215%201.848.612%202.021%201.25.079.295-.021.601-.274.837l-.598.501c.667.304%201.243.698%201.311%201.179.02.144.022.507-.393.787l-.564.365c1.285.521%201.361.96%201.381%201.126.018.142.011.496-.427.746l-.854.489c.064-1.19%201.985-2.585%202.697-3.248zM49.34%209.925c0-.667%201-.667%201%200%200%20.653.818%201.205%201.787%201.205s1.787-.552%201.787-1.205c0-.667%201-.667%201%200%200%201.216-1.25%202.205-2.787%202.205s-2.787-.989-2.787-2.205zm-.887-7.633c-.093.077-.205.114-.317.114a.5.5%200%200%201-.318-.886L49.183.397a.5.5%200%200%201%20.703.068.5.5%200%200%201-.069.703zm7.661-.065c-.086%200-.173-.022-.253-.068l-1.523-.893c-.575-.337-.069-1.2.506-.863l1.523.892a.5.5%200%200%201%20.179.685c-.094.158-.261.247-.432.247z%22%20fill%3D%22%233bb300%22/%3E%3C/svg%3E"/>
 
 
@@ -16,85 +16,40 @@
             <label id="navtoggle" for="togglestate" class="pdoc-button"><svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke-linecap='round' stroke="currentColor" stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg></label>
             <input id="togglestate" type="checkbox">
             <div>
-                        <a class="pdoc-button module-list-button" href="../ida_scripts.html">
+                        <a class="pdoc-button module-list-button" href="./">
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0v-2z"/>
   <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
-</svg>                            &nbsp;ida_scripts</a>
+</svg>                            &nbsp;
+                            Module Index
+                        </a>
 
                     <input type="search" placeholder="Search..." role="searchbox" aria-label="search"
                            pattern=".+" required>
 
 
 
+                    <h2>Submodules</h2>
+                    <ul>
+                            <li><a href="ida_scripts/memory.html">ida_scripts.memory</a></li>
+                            <li><a href="ida_scripts/struc.html">ida_scripts.struc</a></li>
+                            <li><a href="ida_scripts/module.html">ida_scripts.module</a></li>
+                            <li><a href="ida_scripts/misc.html">ida_scripts.misc</a></li>
+                    </ul>
 
                     <h2>API Documentation</h2>
                         <ul class="memberlist">
             <li>
-                    <a class="class" href="#Pointer">Pointer</a>
-                            <ul class="memberlist">
-                        <li>
-                                <a class="function" href="#Pointer.__init__">Pointer</a>
-                        </li>
-                        <li>
-                                <a class="variable" href="#Pointer.default_string_encoding">default_string_encoding</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.read">read</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.write">write</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.read_write_with_struct">read_write_with_struct</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.u8">u8</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.u16">u16</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.u32">u32</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.u64">u64</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.s8">s8</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.s16">s16</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.s32">s32</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.s64">s64</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.string">string</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.ptr">ptr</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.hexdump_str">hexdump_str</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.hexdump">hexdump</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.add">add</a>
-                        </li>
-                        <li>
-                                <a class="function" href="#Pointer.sub">sub</a>
-                        </li>
-                </ul>
-
+                    <a class="module" href="#memory">memory</a>
             </li>
             <li>
-                    <a class="function" href="#ptr">ptr</a>
+                    <a class="module" href="#struc">struc</a>
+            </li>
+            <li>
+                    <a class="module" href="#module">module</a>
+            </li>
+            <li>
+                    <a class="module" href="#misc">misc</a>
             </li>
     </ul>
 
@@ -109,12 +64,34 @@
     <main class="pdoc">
             <section>
                     <h1 class="modulename">
-<a href="./../ida_scripts.html">ida_scripts</a><wbr>.memory    </h1>
+ida_scripts    </h1>
 
-                        <div class="docstring"><p>Provides class(es) for interacting with the debugged process's memory.</p>
+                        <div class="docstring"><p>To use, load the <code>load.py</code> script in IDA Pro. Supports the latest IDAPython api.</p>
 </div>
 
                         <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39; To use, load the `load.py` script in IDA Pro. Supports the latest IDAPython api. &#39;&#39;&#39;</span>
+
+<span class="n">__docformat__</span> <span class="o">=</span> <span class="s2">&quot;numpy&quot;</span>
+
+<span class="n">__pdoc__</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="s1">&#39;utils&#39;</span> <span class="p">:</span> <span class="kc">False</span>
+<span class="p">}</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">memory</span><span class="p">,</span> <span class="n">struc</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">misc</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="s1">&#39;struc&#39;</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">,</span> <span class="s1">&#39;misc&#39;</span><span class="p">]</span>
+</pre></div>
+
+        </details>
+
+            </section>
+                <section id="memory">
+                                <div class="attr module"><a class="headerlink" href="#memory">#&nbsp;&nbsp</a>
+<span class="name"><a href="ida_scripts/memory.html">ida_scripts.memory</a></span></div>
+
+                <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">Provides class(es) for interacting with the debugged process&#39;s memory.</span>
@@ -296,670 +273,362 @@
 
         </details>
 
-            </section>
-                <section id="Pointer">
-                                <div class="attr class">
-        <a class="headerlink" href="#Pointer">#&nbsp;&nbsp</a>
+            <div class="docstring"><p>Provides class(es) for interacting with the debugged process's memory.</p>
+</div>
 
-        
-        <span class="def">class</span>
-        <span class="name">Pointer</span>:
-    </div>
+
+                </section>
+                <section id="struc">
+                                <div class="attr module"><a class="headerlink" href="#struc">#&nbsp;&nbsp</a>
+<span class="name"><a href="ida_scripts/struc.html">ida_scripts.struc</a></span></div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Pointer</span><span class="p">:</span>
-	<span class="sd">&#39;&#39;&#39; Represent an address.</span>
-<span class="sd">	The `Pointer` class offers convenient access to read/write from a memory address.</span>
+            <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39; Provides class(es) for interacting with structures (definition and instances in memory). &#39;&#39;&#39;</span>
 
-<span class="sd">	Init a `Pointer` object with `Pointer.__init__` or the shorthand `ptr`.</span>
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">ida_typeinf</span>
+	<span class="kn">import</span> <span class="nn">ida_struct</span>
+	<span class="kn">import</span> <span class="nn">ida_idaapi</span>
+	<span class="kn">import</span> <span class="nn">ida_bytes</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+<span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="sd">	A `Pointer` object provides convenient functions to read/write certain data types (integers, string, pointer) to its address in memory.</span>
-<span class="sd">	These methods take an optional `value` parameter. They read and return the value if `value` is `None`, write and return success/failure as a `bool` when `value` is not None.</span>
-<span class="sd">	</span>
-<span class="sd">	`Pointer` can be added/subtracted from another `Pointer` or `int` to yield a new `Pointer`.</span>
-<span class="sd">	&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">.memory</span> <span class="kn">import</span> <span class="n">Pointer</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
 
-	<span class="n">default_string_encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
-	<span class="sd">&#39;&#39;&#39; The default string encoding used by `Pointer.string`. Defaults to `&#39;utf-8&#39;`. &#39;&#39;&#39;</span>
+<span class="nd">@auto_repr</span><span class="p">([</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;dtype&#39;</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">],</span> <span class="p">{</span> <span class="s1">&#39;offset&#39;</span> <span class="p">:</span> <span class="nb">hex</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="nb">hex</span> <span class="p">})</span>
+<span class="k">class</span> <span class="nc">MemberT</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represent a member of a struct type. &#39;&#39;&#39;</span>
 
-	<span class="c1"># INIT	</span>
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-		<span class="sd">&#39;&#39;&#39; Init with an address. &#39;&#39;&#39;</span>
-		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;addr can only be int!&#39;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">addr</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Init with an `ida_struct.member_t` object. &#39;&#39;&#39;</span>
+		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">member_t</span><span class="p">,</span> <span class="s1">&#39;Invalid member!&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span> <span class="o">=</span> <span class="n">member</span>
 
-	<span class="c1"># READ/WRITE</span>
-	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Read bytes from `self.addr + offset` of given size. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="n">idc</span><span class="o">.</span><span class="n">get_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Member id (mid). &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">id</span>
 
-	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="n">ida_dbg</span><span class="o">.</span><span class="n">write_dbg_memory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bytes</span><span class="p">)</span>
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Member name. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
-	<span class="c1"># The following methods reads when `value` is None and writes otherwise.</span>
-	<span class="k">def</span> <span class="nf">read_write_with_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Wwrite an integer. &#39;&#39;&#39;</span>
-		<span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">FMT_TO_SIZE</span><span class="p">[</span><span class="nb">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()]))[</span><span class="mi">0</span><span class="p">]</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-	
-	<span class="k">def</span> <span class="nf">u8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint8. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-	
-	<span class="k">def</span> <span class="nf">u16</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint16. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Member type, represented with `ida_typeinf.tinfo_t`. &#39;&#39;&#39;</span>
+		<span class="n">tif</span> <span class="o">=</span> <span class="n">ida_typeinf</span><span class="o">.</span><span class="n">tinfo_t</span><span class="p">()</span>
+		<span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_tinfo</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">tif</span>
 
-	<span class="k">def</span> <span class="nf">u32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint32. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">offset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Member offset in struct. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">soff</span>
 
-	<span class="k">def</span> <span class="nf">u64</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint64. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Member size in bytes. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">s8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int8. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-	<span class="k">def</span> <span class="nf">s16</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int16. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-	<span class="k">def</span> <span class="nf">s32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int32. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-	<span class="k">def</span> <span class="nf">s64</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int64. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-	<span class="k">def</span> <span class="nf">string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">read_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write string, optionally specifying a custom encoding and length to read.</span>
+	<span class="k">def</span> <span class="nf">instance_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Pointer</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Get the value from the given address.</span>
 <span class="sd">		</span>
+<span class="sd">		This method reads and parses the value at the given address using the appropriate type.</span>
+
 <span class="sd">		Parameters</span>
 <span class="sd">		----------</span>
-<span class="sd">		value : str, default = None</span>
-<span class="sd">			Value to be written, the function reads if it&#39;s `None`.</span>
-<span class="sd">		encoding : str, default = None</span>
-<span class="sd">			Encoding to be used for reading/writing, specify `None` to use `Pointer.default_string_encoding`.</span>
-<span class="sd">		read_length : int, defualt = None</span>
-<span class="sd">			Length to read, leave None to read until `\\0`.</span>
+<span class="sd">		addr : `Pointer`</span>
 
 <span class="sd">		Returns</span>
 <span class="sd">		-------</span>
-<span class="sd">		`str` or `bool`</span>
-<span class="sd">			Either the read string, or a bool indicating whether write succeeded.</span>
+<span class="sd">		`Pointer` or `int`</span>
+<span class="sd">			The parsed value.</span>
 <span class="sd">		&#39;&#39;&#39;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">encoding</span><span class="p">:</span>
-			<span class="n">encoding</span> <span class="o">=</span> <span class="n">Pointer</span><span class="o">.</span><span class="n">default_string_encoding</span>
-		<span class="c1"># read</span>
-		<span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">read_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">read_length</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="s1">&#39;backslashreplace&#39;</span><span class="p">)</span>
-			<span class="c1"># read null-terminated</span>
-			<span class="n">string</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
-			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-				<span class="n">string</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
-				<span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">STR_MAXLEN</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="s1">&#39;backslashreplace&#39;</span><span class="p">)</span>
-		<span class="c1"># write</span>
+		<span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span>
+		<span class="c1"># return ptr/array as Pointer</span>
+		<span class="k">if</span> <span class="n">dtype</span><span class="o">.</span><span class="n">is_ptr_or_array</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">addr</span>
+		<span class="c1"># treat everthing else as int</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">encoding</span><span class="p">))</span>
+			<span class="k">assert</span> <span class="ow">not</span> <span class="n">dtype</span><span class="o">.</span><span class="n">is_floating</span><span class="p">(),</span> <span class="s1">&#39;FP not supported yet!&#39;</span>
+			<span class="n">signed</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">is_signed</span><span class="p">()</span>
+			<span class="n">length</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">*</span> <span class="mi">8</span>
+			<span class="n">method</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">signed</span> <span class="k">else</span> <span class="s2">&quot;u&quot;</span><span class="si">}{</span><span class="n">length</span><span class="si">}</span><span class="s1">&#39;</span>
+			<span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">method</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Cannot find method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">, it is likely not supported.&#39;</span>
+			<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">method</span><span class="p">)()</span>
 
-	<span class="k">def</span> <span class="nf">ptr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="s1">&#39;Pointer&#39;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write pointer. &#39;&#39;&#39;</span>
-		<span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u64</span> <span class="k">if</span> <span class="n">IS_64BIT</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">u32</span>
-		<span class="c1"># read</span>
-		<span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">Pointer</span><span class="p">(</span><span class="n">method</span><span class="p">())</span>
-		<span class="c1"># write</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">method</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">instance_at_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Get the value from a struct at the given address.</span>
+<span class="sd">		</span>
+<span class="sd">		Identical to `instance_at` but applies the offset of this member.</span>
 
-	<span class="k">def</span> <span class="nf">hexdump_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Generate hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="n">hexdump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">offset</span><span class="p">),</span> <span class="n">start_offset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
+<span class="sd">		Parameters</span>
+<span class="sd">		----------</span>
+<span class="sd">		struct_addr : `Pointer`</span>
+<span class="sd">			A pointer to an instance of the struct.</span>
 
-	<span class="k">def</span> <span class="nf">hexdump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-		<span class="sd">&#39;&#39;&#39; Print hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;</span>
-		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hexdump_str</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
+<span class="sd">		Returns</span>
+<span class="sd">		-------</span>
+<span class="sd">		`Pointer` or `int`</span>
+<span class="sd">			The parsed value.</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instance_at</span><span class="p">(</span><span class="n">struct_addr</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
 
-	<span class="c1"># OPERATORS</span>
-	<span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Pointer</span><span class="p">:</span>
-			<span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">addr</span>
-		<span class="k">return</span> <span class="n">Pointer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">+</span> <span class="n">other</span><span class="p">)</span>
+<span class="nd">@auto_repr</span><span class="p">([</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">],</span> <span class="p">{</span> <span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="nb">hex</span> <span class="p">})</span>
+<span class="k">class</span> <span class="nc">StrucT</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represent a struct type. &#39;&#39;&#39;</span>
 
-	<span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Pointer</span><span class="p">:</span>
-			<span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">addr</span>
-		<span class="k">return</span> <span class="n">Pointer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">-</span> <span class="n">other</span><span class="p">)</span>
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">find_struc</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Find struct type by name. &#39;&#39;&#39;</span>
+		<span class="nb">id</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc_id</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="kc">None</span>
 
-	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Pointer</span><span class="p">:</span>
-			<span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">addr</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">==</span> <span class="n">other</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struc</span><span class="p">:</span> <span class="s1">&#39;ida_struct.struc_t&#39;</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Init with an `ida_struct.struc_t` object. &#39;&#39;&#39;</span>
+		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">struc</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">struc_t</span><span class="p">,</span> <span class="s1">&#39;Invalid struc!&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">:</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">struc_t</span> <span class="o">=</span> <span class="n">struc</span>
 
-	<span class="c1"># OPERATOR ALIASES</span>
-	<span class="c1"># for chaining</span>
-	<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Struct id. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="o">.</span><span class="n">id</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Struct name. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MemberT</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; All member types of struct. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">MemberT</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Struct size in bytes. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">instance_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;StrucI&#39;</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Get an instance of this struct at the given address. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">StrucI</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 	
-	<span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">return</span> <span class="bp">self</span> <span class="o">-</span> <span class="n">other</span>
+	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Get a member type by name. &#39;&#39;&#39;</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="k">def</span> <span class="nf">member_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Get a member type by offset. &#39;&#39;&#39;</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_id</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="c1"># MUTATING METHODS</span>
+	<span class="c1"># These methods do not check alignments.</span>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">create_struc</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Create and return a new struct with a given name. &#39;&#39;&#39;</span>
+		<span class="n">tid</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">add_struc</span><span class="p">(</span><span class="n">ida_idaapi</span><span class="o">.</span><span class="n">BADADDR</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+		<span class="n">struct</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">add_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Create and return a new member in this struct type. &#39;&#39;&#39;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;anonymous_</span><span class="si">{</span><span class="n">to_hex</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">add_struc_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Failed to add member: </span><span class="si">{</span><span class="n">STRUC_ERROR_MEMBER_DESCRIPTIONS</span><span class="p">[</span><span class="n">result</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">add_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Create and return a new member representing a bytes gap. &#39;&#39;&#39;</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;gap</span><span class="si">{</span><span class="n">to_hex</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">ida_bytes</span><span class="o">.</span><span class="n">byte_flag</span><span class="p">(),</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">delete_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">MemberT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Delete a given member. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">del_struc_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">add_member_auto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Create and return a new member in this struct type, automatically reworking gaps.</span>
+
+<span class="sd">		A gap is recognised by:</span>
+<span class="sd">		1. Is a single or array of &#39;char&#39; or &#39;_BYTE&#39;.</span>
+<span class="sd">		2. Name starting with &#39;gap&#39; (all lowercase).</span>
+
+<span class="sd">		If the requested offset falls within a gap of the above definition, the gap will automatically be adjusted to accomodate the new member.</span>
+
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="c1"># check if offset&#39;s in a gap</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">member</span><span class="p">:</span>
+			<span class="c1"># check if member&#39;s a gap</span>
+			<span class="c1"># must be byte (one or array) with name starting with &#39;gap&#39;</span>
+			<span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">dtype</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;char&#39;</span><span class="p">,</span> <span class="s1">&#39;_BYT&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;gap&#39;</span><span class="p">),</span> <span class="s1">&#39;Failed to add member: offset is occupied by a non-gap member.&#39;</span>
+			<span class="c1"># recreate gap(s)</span>
+			<span class="n">gap_start</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span>
+			<span class="n">gap_end</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">member</span><span class="o">.</span><span class="n">size</span>
+			<span class="c1"># 1. delete existing gap</span>
+			<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_member</span><span class="p">(</span><span class="n">member</span><span class="p">),</span> <span class="s1">&#39;Failed to delete existing gap.&#39;</span>
+			<span class="c1"># 2. create lower gap if necessary</span>
+			<span class="k">if</span> <span class="n">offset</span> <span class="o">&gt;</span> <span class="n">gap_start</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">add_gap</span><span class="p">(</span><span class="n">gap_start</span><span class="p">,</span> <span class="n">offset</span> <span class="o">-</span> <span class="n">gap_start</span><span class="p">)</span>
+			<span class="c1"># 3. create member</span>
+			<span class="n">new_member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+			<span class="c1"># 4. create higher gap if necessary</span>
+			<span class="n">higher_gap_start</span> <span class="o">=</span> <span class="n">new_member</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">new_member</span><span class="o">.</span><span class="n">size</span>
+			<span class="k">if</span> <span class="n">higher_gap_start</span> <span class="o">&lt;</span> <span class="n">gap_end</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">add_gap</span><span class="p">(</span><span class="n">higher_gap_start</span><span class="p">,</span> <span class="n">gap_end</span> <span class="o">-</span> <span class="n">higher_gap_start</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">new_member</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">StrucI</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represent a struct instance. &#39;&#39;&#39;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">,</span> <span class="n">struc_t</span><span class="p">:</span> <span class="n">StrucT</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Init with a base address and a struct type. &#39;&#39;&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">:</span> <span class="n">Pointer</span> <span class="o">=</span> <span class="n">addr</span>
+		<span class="sd">&#39;&#39;&#39; The address of this struct. &#39;&#39;&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="p">:</span> <span class="n">StrucT</span> <span class="o">=</span> <span class="n">struc_t</span>
+		<span class="sd">&#39;&#39;&#39; The type definition of this struct. &#39;&#39;&#39;</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Collect all members of this struct as a dict. &#39;&#39;&#39;</span>
+		<span class="n">members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="o">.</span><span class="n">members</span>
+		<span class="k">return</span> <span class="p">{</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">instance_at_struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">members</span> <span class="p">}</span>
+
+	<span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">return_pointer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Get a member&#39;s value or `Pointer` by its name. &#39;&#39;&#39;</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">member</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">+</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span> <span class="k">if</span> <span class="n">return_pointer</span> <span class="k">else</span> <span class="n">member</span><span class="o">.</span><span class="n">instance_at_struct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Get a member&#39;s value by its name. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Set a member&#39;s value by its name. &#39;&#39;&#39;</span>
+		<span class="n">member_ptr</span><span class="p">:</span> <span class="n">Pointer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="n">member_ptr</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Cannot find member </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> for struct </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="si">}</span><span class="s1">!&#39;</span>
+		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">str</span><span class="p">:</span>
+			<span class="n">member_ptr</span><span class="o">.</span><span class="n">string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+		<span class="c1"># treat everthing else as int</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">dtype</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>
+			<span class="k">assert</span> <span class="ow">not</span> <span class="n">dtype</span><span class="o">.</span><span class="n">is_floating</span><span class="p">(),</span> <span class="s1">&#39;FP not supported yet!&#39;</span>
+			<span class="n">signed</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">is_signed</span><span class="p">()</span>
+			<span class="n">length</span> <span class="o">=</span> <span class="n">dtype</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span> <span class="o">*</span> <span class="mi">8</span>
+			<span class="n">method</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="s2">&quot;s&quot;</span> <span class="k">if</span> <span class="n">signed</span> <span class="k">else</span> <span class="s2">&quot;u&quot;</span><span class="si">}{</span><span class="n">length</span><span class="si">}</span><span class="s1">&#39;</span>
+			<span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">member_ptr</span><span class="p">,</span> <span class="n">method</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Cannot find accessor for </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">, it is likely not supported.&#39;</span>
+			<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">member_ptr</span><span class="p">,</span> <span class="n">method</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="nb">hex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;StrucI addr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="si">}</span><span class="s1"> struc_t=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="si">}</span><span class="s1"> data=</span><span class="si">{</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Represent an address.
-The <code><a href="#Pointer">Pointer</a></code> class offers convenient access to read/write from a memory address.</p>
-
-<p>Init a <code><a href="#Pointer">Pointer</a></code> object with <code><a href="#Pointer.__init__">Pointer.__init__</a></code> or the shorthand <code><a href="#Pointer.ptr">ptr</a></code>.</p>
-
-<p>A <code><a href="#Pointer">Pointer</a></code> object provides convenient functions to read/write certain data types (integers, string, pointer) to its address in memory.
-These methods take an optional <code>value</code> parameter. They read and return the value if <code>value</code> is <code>None</code>, write and return success/failure as a <code>bool</code> when <code>value</code> is not None.</p>
-
-<p><code><a href="#Pointer">Pointer</a></code> can be added/subtracted from another <code><a href="#Pointer">Pointer</a></code> or <code>int</code> to yield a new <code><a href="#Pointer">Pointer</a></code>.</p>
+            <div class="docstring"><p>Provides class(es) for interacting with structures (definition and instances in memory).</p>
 </div>
 
 
-                            <div id="Pointer.__init__" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.__init__">#&nbsp;&nbsp</a>
-
-        
-            <span class="name">Pointer</span><span class="signature">(addr: int)</span>
-    </div>
+                </section>
+                <section id="module">
+                                <div class="attr module"><a class="headerlink" href="#module">#&nbsp;&nbsp</a>
+<span class="name"><a href="ida_scripts/module.html">ida_scripts.module</a></span></div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-		<span class="sd">&#39;&#39;&#39; Init with an address. &#39;&#39;&#39;</span>
-		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;addr can only be int!&#39;</span>
+            <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39; Provides class(es) for interacing with modules. &#39;&#39;&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">idc</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@auto_repr</span><span class="p">([</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;addr&#39;</span><span class="p">],</span> <span class="p">{</span> <span class="s1">&#39;addr&#39;</span> <span class="p">:</span> <span class="nb">hex</span> <span class="p">})</span>
+<span class="k">class</span> <span class="nc">Module</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represents a single module. &#39;&#39;&#39;</span>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">all_modules</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;Module&#39;</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Return a list of all the modules. &#39;&#39;&#39;</span>
+		<span class="n">m</span> <span class="o">=</span> <span class="n">idc</span><span class="o">.</span><span class="n">get_first_module</span><span class="p">()</span>
+		<span class="n">modules</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">while</span> <span class="n">m</span><span class="p">:</span>
+			<span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+			<span class="n">m</span> <span class="o">=</span> <span class="n">idc</span><span class="o">.</span><span class="n">get_next_module</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">modules</span>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
+		<span class="n">modules</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">all_modules</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">module</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">idc</span><span class="o">.</span><span class="n">get_module_name</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">=</span> <span class="n">addr</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Init with an address.</p>
+            <div class="docstring"><p>Provides class(es) for interacing with modules.</p>
 </div>
 
 
-                            </div>
-                            <div id="Pointer.default_string_encoding" class="classattr">
-                                            <div class="attr variable"><a class="headerlink" href="#Pointer.default_string_encoding">#&nbsp;&nbsp</a>
-
-        <span class="name">default_string_encoding</span><span class="annotation">: str</span><span class="default_value"> = &#39;utf-8&#39;</span>
-    </div>
-
-            <div class="docstring"><p>The default string encoding used by <code><a href="#Pointer.string">Pointer.string</a></code>. Defaults to <code>'utf-8'</code>.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.read" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.read">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">read</span><span class="signature">(self, size: int, offset: int = 0) -&gt; bytes</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span> <span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Read bytes from `self.addr + offset` of given size. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="n">idc</span><span class="o">.</span><span class="n">get_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read bytes from <code>self.addr + offset</code> of given size.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.write" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.write">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">write</span><span class="signature">(self, bytes: bytes, offset: int = 0) -&gt; bool</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Write bytes to `self.addr + offset`. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="n">ida_dbg</span><span class="o">.</span><span class="n">write_dbg_memory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bytes</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Write bytes to <code>self.addr + offset</code>.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.read_write_with_struct" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.read_write_with_struct">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">read_write_with_struct</span><span class="signature">(self, format: str, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">read_write_with_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Wwrite an integer. &#39;&#39;&#39;</span>
-		<span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">FMT_TO_SIZE</span><span class="p">[</span><span class="nb">format</span><span class="o">.</span><span class="n">lower</span><span class="p">()]))[</span><span class="mi">0</span><span class="p">]</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">format</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Wwrite an integer.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.u8" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.u8">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">u8</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">u8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint8. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write uint8.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.u16" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.u16">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">u16</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">u16</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint16. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write uint16.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.u32" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.u32">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">u32</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">u32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint32. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write uint32.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.u64" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.u64">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">u64</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">u64</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write uint64. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write uint64.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.s8" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.s8">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">s8</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">s8</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int8. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write int8.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.s16" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.s16">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">s16</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">s16</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int16. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write int16.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.s32" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.s32">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">s32</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">s32</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int32. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write int32.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.s64" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.s64">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">s64</span><span class="signature">(self, value: int = None) -&gt; Union[int, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">s64</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write int64. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_write_with_struct</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write int64.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.string" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.string">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">string</span><span class="signature">(
-    self,
-    value: str = None,
-    encoding: str = None,
-    read_length: int = None
-) -&gt; Union[str, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">encoding</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">read_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write string, optionally specifying a custom encoding and length to read.</span>
-<span class="sd">		</span>
-<span class="sd">		Parameters</span>
-<span class="sd">		----------</span>
-<span class="sd">		value : str, default = None</span>
-<span class="sd">			Value to be written, the function reads if it&#39;s `None`.</span>
-<span class="sd">		encoding : str, default = None</span>
-<span class="sd">			Encoding to be used for reading/writing, specify `None` to use `Pointer.default_string_encoding`.</span>
-<span class="sd">		read_length : int, defualt = None</span>
-<span class="sd">			Length to read, leave None to read until `\\0`.</span>
-
-<span class="sd">		Returns</span>
-<span class="sd">		-------</span>
-<span class="sd">		`str` or `bool`</span>
-<span class="sd">			Either the read string, or a bool indicating whether write succeeded.</span>
-<span class="sd">		&#39;&#39;&#39;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">encoding</span><span class="p">:</span>
-			<span class="n">encoding</span> <span class="o">=</span> <span class="n">Pointer</span><span class="o">.</span><span class="n">default_string_encoding</span>
-		<span class="c1"># read</span>
-		<span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">read_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-				<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">read_length</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="s1">&#39;backslashreplace&#39;</span><span class="p">)</span>
-			<span class="c1"># read null-terminated</span>
-			<span class="n">string</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
-			<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-				<span class="n">string</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">))</span>
-				<span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">string</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">STR_MAXLEN</span><span class="p">:</span> <span class="k">break</span>
-			<span class="k">return</span> <span class="n">string</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="p">,</span> <span class="s1">&#39;backslashreplace&#39;</span><span class="p">)</span>
-		<span class="c1"># write</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">encoding</span><span class="p">))</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write string, optionally specifying a custom encoding and length to read.</p>
-
-<h6 id="parameters">Parameters</h6>
-
-<ul>
-<li><strong>value</strong> (str, default = None):
-Value to be written, the function reads if it's <code>None</code>.</li>
-<li><strong>encoding</strong> (str, default = None):
-Encoding to be used for reading/writing, specify <code>None</code> to use <code><a href="#Pointer.default_string_encoding">Pointer.default_string_encoding</a></code>.</li>
-<li><strong>read_length</strong> (int, defualt = None):
-Length to read, leave None to read until <code>\0</code>.</li>
-</ul>
-
-<h6 id="returns">Returns</h6>
-
-<ul>
-<li><strong><code>str</code> or <code>bool</code></strong>: Either the read string, or a bool indicating whether write succeeded.</li>
-</ul>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.ptr" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.ptr">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">ptr</span><span class="signature">(
-    self,
-    value: <a href="#Pointer">ida_scripts.memory.Pointer</a> = None
-) -&gt; Union[<a href="#Pointer">ida_scripts.memory.Pointer</a>, bool]</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">ptr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="s1">&#39;Pointer&#39;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-		<span class="sd">&#39;&#39;&#39; Read/Write pointer. &#39;&#39;&#39;</span>
-		<span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">u64</span> <span class="k">if</span> <span class="n">IS_64BIT</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">u32</span>
-		<span class="c1"># read</span>
-		<span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-			<span class="k">return</span> <span class="n">Pointer</span><span class="p">(</span><span class="n">method</span><span class="p">())</span>
-		<span class="c1"># write</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="n">method</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Read/Write pointer.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.hexdump_str" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.hexdump_str">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">hexdump_str</span><span class="signature">(self, len: int = 100, offset: int = 0) -&gt; str</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">hexdump_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Generate hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="n">hexdump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">offset</span><span class="p">),</span> <span class="n">start_offset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="p">)</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Generate hexdump from <code>self.addr + offset</code> of specified length.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.hexdump" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.hexdump">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">hexdump</span><span class="signature">(self, len: int = 100, offset: int = 0)</span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">hexdump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
-		<span class="sd">&#39;&#39;&#39; Print hexdump from `self.addr + offset` of specified length. &#39;&#39;&#39;</span>
-		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hexdump_str</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
-</pre></div>
-
-        </details>
-
-            <div class="docstring"><p>Print hexdump from <code>self.addr + offset</code> of specified length.</p>
-</div>
-
-
-                            </div>
-                            <div id="Pointer.add" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.add">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">add</span><span class="signature">(
-    self,
-    other: Union[<a href="#Pointer">ida_scripts.memory.Pointer</a>, int]
-) -&gt; <a href="#Pointer">ida_scripts.memory.Pointer</a></span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">return</span> <span class="bp">self</span> <span class="o">+</span> <span class="n">other</span>
-</pre></div>
-
-        </details>
-
-    
-
-                            </div>
-                            <div id="Pointer.sub" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Pointer.sub">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">sub</span><span class="signature">(
-    self,
-    other: Union[<a href="#Pointer">ida_scripts.memory.Pointer</a>, int]
-) -&gt; <a href="#Pointer">ida_scripts.memory.Pointer</a></span>:
-    </div>
-
-                <details>
-            <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Pointer&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;Pointer&#39;</span><span class="p">:</span>
-		<span class="k">return</span> <span class="bp">self</span> <span class="o">-</span> <span class="n">other</span>
-</pre></div>
-
-        </details>
-
-    
-
-                            </div>
                 </section>
-                <section id="ptr">
-                            <div class="attr function"><a class="headerlink" href="#ptr">#&nbsp;&nbsp</a>
-
-        
-            <span class="def">def</span>
-            <span class="name">ptr</span><span class="signature">(addr: int) -&gt; <a href="#Pointer">ida_scripts.memory.Pointer</a></span>:
-    </div>
+                <section id="misc">
+                                <div class="attr module"><a class="headerlink" href="#misc">#&nbsp;&nbsp</a>
+<span class="name"><a href="ida_scripts/misc.html">ida_scripts.misc</a></span></div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">ptr</span><span class="p">(</span><span class="n">addr</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pointer</span><span class="p">:</span>
-	<span class="sd">&#39;&#39;&#39; Initialise a `Pointer`. &#39;&#39;&#39;</span>
+            <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39; Provides additional helper functions. &#39;&#39;&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">ida_frame</span>
+	<span class="kn">import</span> <span class="nn">ida_struct</span>
+	<span class="kn">import</span> <span class="nn">idaapi</span>
+	<span class="kn">import</span> <span class="nn">idc</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+<span class="kn">from</span> <span class="nn">.memory</span> <span class="kn">import</span> <span class="n">Pointer</span>
+
+<span class="k">def</span> <span class="nf">find_local_var</span><span class="p">(</span><span class="n">var_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pointer</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Find a local variable by name when paused in a function frame. &#39;&#39;&#39;</span>
+	<span class="n">frame</span> <span class="o">=</span> <span class="n">ida_frame</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="n">idc</span><span class="o">.</span><span class="n">here</span><span class="p">())</span>
+	<span class="n">loc_var</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_name</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">var_name</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">loc_var</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+		<span class="k">return</span> <span class="kc">None</span>
+	<span class="n">stack_ptr</span> <span class="o">=</span> <span class="n">idc</span><span class="o">.</span><span class="n">GetRegValue</span><span class="p">(</span><span class="s1">&#39;rsp&#39;</span> <span class="k">if</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">get_inf_structure</span><span class="p">()</span><span class="o">.</span><span class="n">is_64bit</span><span class="p">()</span> <span class="k">else</span> <span class="s1">&#39;esp&#39;</span><span class="p">)</span>
+	<span class="n">ea</span> <span class="o">=</span> <span class="n">loc_var</span><span class="o">.</span><span class="n">soff</span> <span class="o">+</span> <span class="n">stack_ptr</span>
+	<span class="k">return</span> <span class="n">Pointer</span><span class="p">(</span><span class="n">ea</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">find_symbol</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Pointer</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Find a global symbol by name. &#39;&#39;&#39;</span>
+	<span class="n">addr</span> <span class="o">=</span> <span class="n">idc</span><span class="o">.</span><span class="n">get_name_ea_simple</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">addr</span> <span class="o">==</span> <span class="n">idc</span><span class="o">.</span><span class="n">BADADDR</span><span class="p">:</span>
+		<span class="k">return</span> <span class="kc">None</span>
 	<span class="k">return</span> <span class="n">Pointer</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
 </pre></div>
 
         </details>
 
-            <div class="docstring"><p>Initialise a <code><a href="#Pointer">Pointer</a></code>.</p>
+            <div class="docstring"><p>Provides additional helper functions.</p>
 </div>
 
 
@@ -1013,7 +682,7 @@ Length to read, leave None to read until <code>\0</code>.</li>
             async function initialize() {
                 let docs;
                 try {
-                    let resp = await fetch("../search.json");
+                    let resp = await fetch("search.json");
                     docs = await resp.json();
                 } catch (e) {
                     searchErr = "Cannot fetch search index.";
@@ -1081,7 +750,7 @@ Length to read, leave None to read until <code>\0</code>.</li>
                     }
                     for (let result of results.slice(0, 10)) {
                         let doc = result.doc;
-                        let url = `../${doc.modulename.replaceAll(".", "/")}.html`;
+                        let url = `${doc.modulename.replaceAll(".", "/")}.html`;
                         if (doc.qualname) {
                             url += `#${doc.qualname}`;
                         }
