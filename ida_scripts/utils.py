@@ -45,3 +45,17 @@ def hexdump(data, length = 16, sep = '.', start_offset = 0):
 		result.append(('%08X:  %-'+str(length*(2+1)+1)+'s  |%s|') % (i + start_offset, hexa, text))
 
 	return '\n'.join(result)
+
+def to_hex(n: int) -> str:
+	return hex(n)[2:].upper()
+
+STRUC_ERROR_MEMBER_DESCRIPTIONS = {
+	-1 : 'already has member with this name (bad name)',
+	-2 : 'already has member at this offset',
+	-3 : 'bad number of bytes or bad sizeof(type)',
+	-4 : 'bad typeid parameter',
+	-5 : 'bad struct id (the 1st argument)',
+	-6 : 'unions can\'t have variable sized members',
+	-7 : 'variable sized member should be the last member in the structure',
+	-8 : 'recursive structure nesting is forbidden',
+}

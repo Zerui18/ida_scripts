@@ -1,5 +1,7 @@
 ''' To use, load the `load.py` script in IDA Pro. Supports the latest IDAPython api. '''
 
+__docformat__ = "numpy"
+
 __pdoc__ = {
 	'utils' : False
 }

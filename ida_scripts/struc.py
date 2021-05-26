@@ -2,8 +2,9 @@
 
 try:
 	import ida_typeinf
-	import ida_typeinf
 	import ida_struct
+	import ida_idaapi
+	import ida_bytes
 except: pass
 from json import dumps
 from typing import *
@@ -135,6 +136,73 @@ class StrucT:
 		member = ida_struct.get_member_by_name(self.struc, name)
 		return MemberT(member) if member else None
 
+	def member_at_offset(self, offset: int) -> MemberT:
+		''' Get a member type by offset. '''
+		member = ida_struct.get_member_by_id(ida_struct.get_member_id(self.struc, offset))
+		return MemberT(member[0]) if member else None
+
+	# MUTATING METHODS
+	# These methods do not check alignments.
+
+	@staticmethod
+	def create_struc(name: str) -> 'StrucT':
+		''' Create and return a new struct with a given name. '''
+		tid = ida_struct.add_struc(ida_idaapi.BADADDR, name, False)
+		struct = ida_struct.get_struc(tid)
+		return StrucT(struct)
+
+	def add_member(self, dtype: int, offset: int, size: int, name: str = None) -> MemberT:
+		''' Create and return a new member in this struct type. '''
+		if not name:
+			name = f'anonymous_{to_hex(offset)}'
+		result = ida_struct.add_struc_member(self.struc, name, offset, dtype, None, size)
+		assert result == 0, f'Failed to add member: {STRUC_ERROR_MEMBER_DESCRIPTIONS[result]}'
+		return self[name]
+
+	def add_gap(self, offset: int, size: int) -> MemberT:
+		''' Create and return a new member representing a bytes gap. '''
+		name = f'gap{to_hex(offset)}'
+		return self.add_member(ida_bytes.byte_flag(), offset, size, name)
+
+	def delete_member(self, member: MemberT) -> bool:
+		''' Delete a given member. '''
+		return ida_struct.del_struc_member(self.struc, member.offset)
+
+	def add_member_auto(self, dtype: int, offset: int, size: int, name: str = None) -> MemberT:
+		''' Create and return a new member in this struct type, automatically reworking gaps.
+
+		A gap is recognised by:
+		1. Is a single or array of 'char' or '_BYTE'.
+		2. Name starting with 'gap' (all lowercase).
+
+		If the requested offset falls within a gap of the above definition, the gap will automatically be adjusted to accomodate the new member.
+
+		'''
+		# check if offset's in a gap
+		member = self.member_at_offset(offset)
+		if member:
+			# check if member's a gap
+			# must be byte (one or array) with name starting with 'gap'
+			assert str(member.dtype)[:4] in ['char', '_BYT'] and member.name.startswith('gap'), 'Failed to add member: offset is occupied by a non-gap member.'
+			# recreate gap(s)
+			gap_start = member.offset
+			gap_end = member.offset + member.size
+			# 1. delete existing gap
+			assert self.delete_member(member), 'Failed to delete existing gap.'
+			# 2. create lower gap if necessary
+			if offset > gap_start:
+				self.add_gap(gap_start, offset - gap_start)
+			# 3. create member
+			new_member = self.add_member(dtype, offset, size, name)
+			# 4. create higher gap if necessary
+			higher_gap_start = new_member.offset + new_member.size
+			if higher_gap_start < gap_end:
+				self.add_gap(higher_gap_start, gap_end - higher_gap_start)
+			return new_member
+		else:
+			return self.add_member(dtype, size, offset, name)
+
+
 class StrucI:
 	''' Represent a struct instance. '''
 
@@ -167,15 +235,16 @@ class StrucI:
 		member_ptr: Pointer = self.member(name)
 		assert member_ptr, f'Cannot find member {name} for struct {self.struc_t}!'
 		if type(value) is str:
-			member_ptr.string()
+			member_ptr.string(value)
 		# treat everthing else as int
 		else:
+			dtype = self.struc_t[name].dtype
 			assert not dtype.is_floating(), 'FP not supported yet!'
 			signed = dtype.is_signed()
 			length = dtype.get_size() * 8
 			method = f'{"s" if signed else "u"}{length}'
-			assert hasattr(addr, method), f'Cannot find method {method}, it is likely not supported.'
-			return getattr(addr, method)()
+			assert hasattr(member_ptr, method), f'Cannot find accessor for {method}, it is likely not supported.'
+			return getattr(member_ptr, method)(value)
 
 	def __repr__(self):
 		return f'<StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}>'
