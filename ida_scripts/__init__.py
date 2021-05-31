@@ -6,6 +6,6 @@ __pdoc__ = {
 	'utils' : False
 }
 
-from . import memory, struc, module, misc
+from . import memory, struc, module, misc, func
 
-__all__ = ['memory', 'struc', 'module', 'misc']
+__all__ = ['memory', 'struc', 'func', 'module', 'misc']

@@ -247,4 +247,4 @@ class StrucI:
 			return getattr(member_ptr, method)(value)
 
 	def __repr__(self):
-		return f'<StrucI addr={self.addr} struc_t={self.struc_t} data={dumps(self.members, default=str, indent=4)}>'
+		return f'<StrucI addr={self.addr}, struc_t={self.struc_t}, data={dumps(self.members, default=str, indent=4)}>'

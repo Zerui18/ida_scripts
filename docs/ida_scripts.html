@@ -33,6 +33,7 @@
                     <ul>
                             <li><a href="ida_scripts/memory.html">ida_scripts.memory</a></li>
                             <li><a href="ida_scripts/struc.html">ida_scripts.struc</a></li>
+                            <li><a href="ida_scripts/func.html">ida_scripts.func</a></li>
                             <li><a href="ida_scripts/module.html">ida_scripts.module</a></li>
                             <li><a href="ida_scripts/misc.html">ida_scripts.misc</a></li>
                     </ul>
@@ -44,6 +45,9 @@
             </li>
             <li>
                     <a class="module" href="#struc">struc</a>
+            </li>
+            <li>
+                    <a class="module" href="#func">func</a>
             </li>
             <li>
                     <a class="module" href="#module">module</a>
@@ -79,9 +83,9 @@ ida_scripts    </h1>
 	<span class="s1">&#39;utils&#39;</span> <span class="p">:</span> <span class="kc">False</span>
 <span class="p">}</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">memory</span><span class="p">,</span> <span class="n">struc</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">misc</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">memory</span><span class="p">,</span> <span class="n">struc</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">misc</span><span class="p">,</span> <span class="n">func</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="s1">&#39;struc&#39;</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">,</span> <span class="s1">&#39;misc&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;memory&#39;</span><span class="p">,</span> <span class="s1">&#39;struc&#39;</span><span class="p">,</span> <span class="s1">&#39;func&#39;</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">,</span> <span class="s1">&#39;misc&#39;</span><span class="p">]</span>
 </pre></div>
 
         </details>
@@ -533,12 +537,159 @@ ida_scripts    </h1>
 			<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">member_ptr</span><span class="p">,</span> <span class="n">method</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;StrucI addr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="si">}</span><span class="s1"> struc_t=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="si">}</span><span class="s1"> data=</span><span class="si">{</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
+		<span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;StrucI addr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="si">}</span><span class="s1">, struc_t=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="si">}</span><span class="s1">, data=</span><span class="si">{</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
 </pre></div>
 
         </details>
 
             <div class="docstring"><p>Provides class(es) for interacting with structures (definition and instances in memory).</p>
+</div>
+
+
+                </section>
+                <section id="func">
+                                <div class="attr module"><a class="headerlink" href="#func">#&nbsp;&nbsp</a>
+<span class="name"><a href="ida_scripts/func.html">ida_scripts.func</a></span></div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span><span class="sd">&#39;&#39;&#39; Provides class(es) for interacting with functions. &#39;&#39;&#39;</span>
+
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">idautils</span>
+	<span class="kn">import</span> <span class="nn">ida_funcs</span>
+	<span class="kn">import</span> <span class="nn">ida_name</span>
+	<span class="kn">import</span> <span class="nn">idaapi</span>
+	<span class="kn">import</span> <span class="nn">ida_hexrays</span>
+	<span class="kn">import</span> <span class="nn">ida_lines</span>
+	<span class="kn">import</span> <span class="nn">ida_pro</span>
+<span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@auto_repr</span><span class="p">([</span><span class="s1">&#39;address&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">])</span>
+<span class="k">class</span> <span class="nc">CItem</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represent a citem inside a decompiled function. &#39;&#39;&#39;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="s1">&#39;ida_hexrays.citem_t&#39;</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Initialise with a `ida_hexrays.citem_t` object. &#39;&#39;&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">item</span> <span class="o">=</span> <span class="n">item</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Item address. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">ea</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Short label for item. &#39;&#39;&#39;</span>
+	
+		<span class="k">def</span> <span class="nf">get_expr_name</span><span class="p">(</span><span class="n">expr</span><span class="p">):</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">print1</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">ida_lines</span><span class="o">.</span><span class="n">tag_remove</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">ida_pro</span><span class="o">.</span><span class="n">str2user</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">name</span>
+		
+		<span class="n">op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">op</span>
+		<span class="n">insn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cinsn</span>
+		<span class="n">expr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span>
+		<span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">get_ctype_name</span><span class="p">(</span><span class="n">op</span><span class="p">)]</span>
+		<span class="k">if</span> <span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_ptr</span><span class="p">:</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">expr</span><span class="o">.</span><span class="n">ptrsize</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">:</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.</span><span class="si">%d</span><span class="s2"> (m=</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">ptrsize</span><span class="p">,</span> <span class="n">expr</span><span class="o">.</span><span class="n">m</span><span class="p">))</span>
+		<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">:</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; (m=</span><span class="si">%d</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">m</span><span class="p">,))</span>
+		<span class="k">elif</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span>
+				<span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_obj</span><span class="p">,</span>
+				<span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_var</span><span class="p">]:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">get_expr_name</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;.</span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">refwidth</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+		<span class="k">elif</span> <span class="n">op</span> <span class="ow">in</span> <span class="p">[</span>
+				<span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_num</span><span class="p">,</span>
+				<span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_helper</span><span class="p">,</span>
+				<span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_str</span><span class="p">]:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">get_expr_name</span><span class="p">(</span><span class="n">expr</span><span class="p">)</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,))</span>
+		<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cit_goto</span><span class="p">:</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot; LABEL_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">insn</span><span class="o">.</span><span class="n">cgoto</span><span class="o">.</span><span class="n">label_num</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cit_asm</span><span class="p">:</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&lt;asm statements; unsupported ATM&gt;&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">is_expr</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">expr</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+			<span class="n">tstr</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">_print</span><span class="p">()</span>
+			<span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tstr</span> <span class="k">if</span> <span class="n">tstr</span> <span class="k">else</span> <span class="s2">&quot;?&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="s2">&quot; // &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+<span class="nd">@auto_repr</span><span class="p">([</span><span class="s1">&#39;original&#39;</span><span class="p">])</span>
+<span class="k">class</span> <span class="nc">CFunc</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represent a decompiled function. &#39;&#39;&#39;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">:</span> <span class="s1">&#39;Func&#39;</span><span class="p">,</span> <span class="n">decompiled</span><span class="p">:</span> <span class="s1">&#39;ida_hexrays.cfunc_t&#39;</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Initialise with the original `Func` and the decompiled `ida_hexrays.cfunc_t` object. &#39;&#39;&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">original</span> <span class="o">=</span> <span class="n">original</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">decompiled</span> <span class="o">=</span> <span class="n">decompiled</span>
+	
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">psuedocode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Psuedocode of the decompiled function. &#39;&#39;&#39;</span>
+		<span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompiled</span><span class="o">.</span><span class="n">get_pseudocode</span><span class="p">()</span>
+		<span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">ida_lines</span><span class="o">.</span><span class="n">tag_remove</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">items</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">CItem</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Items of the decomipled function. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">CItem</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">decompiled</span><span class="o">.</span><span class="n">treeitems</span><span class="p">]</span>
+
+
+<span class="nd">@auto_repr</span><span class="p">([</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">],</span> <span class="p">{</span> <span class="s1">&#39;start&#39;</span> <span class="p">:</span> <span class="nb">hex</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span> <span class="p">:</span> <span class="nb">hex</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span> <span class="p">:</span> <span class="nb">hex</span><span class="p">})</span>
+<span class="k">class</span> <span class="nc">Func</span><span class="p">:</span>
+	<span class="sd">&#39;&#39;&#39; Represent a function. &#39;&#39;&#39;</span>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">find_func</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Find function by name. &#39;&#39;&#39;</span>
+		<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">idautils</span><span class="o">.</span><span class="n">Functions</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">ida_name</span><span class="o">.</span><span class="n">get_ea_name</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+				<span class="n">func</span> <span class="o">=</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">get_func</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+				<span class="k">return</span> <span class="n">Func</span><span class="p">(</span><span class="n">idaapi</span><span class="o">.</span><span class="n">get_func</span><span class="p">(</span><span class="n">addr</span><span class="p">))</span> <span class="k">if</span> <span class="n">func</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="s1">&#39;ida_funcs.func_t&#39;</span><span class="p">):</span>
+		<span class="sd">&#39;&#39;&#39; Initialise with a `ida_funcs.func_t` object.&#39;&#39;&#39;</span>
+		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ida_funcs</span><span class="o">.</span><span class="n">func_t</span><span class="p">,</span> <span class="s1">&#39;Invalid func!&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Function name. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="n">ida_name</span><span class="o">.</span><span class="n">get_ea_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">start_ea</span><span class="p">)</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Function start address. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">start_ea</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Function end address. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">end_ea</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Function size. &#39;&#39;&#39;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">decompile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CFunc</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Decompile this function. &#39;&#39;&#39;</span>
+		<span class="n">err</span> <span class="o">=</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">hexrays_failure_t</span><span class="p">()</span>
+		<span class="n">cfunc</span> <span class="o">=</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">decompile_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="n">cfunc</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Decompilation failed: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s1">&#39;</span>
+		<span class="k">return</span> <span class="n">CFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cfunc</span><span class="p">)</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Provides class(es) for interacting with functions.</p>
 </div>
 
 

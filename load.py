@@ -3,6 +3,7 @@
 from ida_scripts.memory import *
 from ida_scripts.module import *
 from ida_scripts.struc import *
+from ida_scripts.func import *
 from ida_scripts.misc import *
 
 try:
@@ -11,5 +12,6 @@ try:
 	idaapi.require('ida_scripts.memory')
 	idaapi.require('ida_scripts.module')
 	idaapi.require('ida_scripts.struc')
+	idaapi.require('ida_scripts.func')
 	idaapi.require('ida_scripts.misc')
 except: pass
