@@ -1,10 +1,11 @@
-from types import FunctionType
+from types import MethodType
 from typing import *
+import json
 
 # THESE ARE INTERNAL UTILS
 # -> not meant for the users
 
-def auto_repr(properties: List[str], transforms: Dict[str, FunctionType] = {}):
+def auto_repr(properties: List[str], transforms: Dict[str, Callable] = {}):
 	''' Automatically generate __repr__ from a list of properties, optionally specifying transforms. '''
 	def decorator(cls):
 		def repr(self):
@@ -48,6 +49,19 @@ def hexdump(data, length = 16, sep = '.', start_offset = 0):
 
 def to_hex(n: int) -> str:
 	return hex(n)[2:].upper()
+
+def get_properties(obj: object) -> Dict[str, Any]:
+	attrs = {}
+	for attr in dir(obj):
+		val = getattr(obj, attr)
+		if not callable(val):
+			attrs[attr] = val
+	return attrs
+
+def print_properties(obj: object):
+	print(json.dumps(get_properties(obj), indent=4, default=str))
+
+pp = print_properties
 
 STRUC_ERROR_MEMBER_DESCRIPTIONS = {
 	-1 : 'already has member with this name (bad name)',

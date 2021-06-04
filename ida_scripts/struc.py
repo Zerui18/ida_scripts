@@ -16,10 +16,12 @@ from .utils import *
 class MemberT:
 	''' Represent a member of a struct type. '''
 
-	def __init__(self, member: 'ida_struct.member_t'):
+	def __init__(self, member: 'ida_struct.member_t', struct: 'StrucT'):
 		''' Init with an `ida_struct.member_t` object. '''
 		assert type(member) is ida_struct.member_t, 'Invalid member!'
 		self.member: 'ida_struct.member_t' = member
+		self.struct = struct
+		''' The struct type containing this member. '''
 
 	@property
 	def id(self) -> int:
@@ -75,6 +77,12 @@ class MemberT:
 			assert hasattr(addr, method), f'Cannot find method {method}, it is likely not supported.'
 			return getattr(addr, method)()
 
+	def __hash__(self) -> int:
+		return self.id
+
+	def __eq__(self, o: object) -> bool:
+		return hash(self) == hash(o)
+
 	def instance_at_struct(self, struct_addr: Pointer):
 		''' Get the value from a struct at the given address.
 		
@@ -120,7 +128,7 @@ class StrucT:
 	@property
 	def members(self) -> List[MemberT]:
 		''' All member types of struct. '''
-		return [MemberT(m) for m in self.struc.members]
+		return [MemberT(m, self) for m in self.struc.members]
 
 	@property
 	def size(self) -> int:
@@ -134,12 +142,17 @@ class StrucT:
 	def __getitem__(self, name: str) -> MemberT:
 		''' Get a member type by name. '''
 		member = ida_struct.get_member_by_name(self.struc, name)
-		return MemberT(member) if member else None
+		return MemberT(member, self) if member else None
 
 	def member_at_offset(self, offset: int) -> MemberT:
 		''' Get a member type by offset. '''
 		member = ida_struct.get_member_by_id(ida_struct.get_member_id(self.struc, offset))
-		return MemberT(member[0]) if member else None
+		return MemberT(member[0], self) if member else None
+
+	def member_starting_at_offset(self, offset: int) -> bool:
+		'''  Get a member type by offset, member must start at offset. '''
+		member = self.member_at_offset(offset)
+		return member if member and member.offset == offset else None
 
 	# MUTATING METHODS
 	# These methods do not check alignments.
@@ -202,6 +215,12 @@ class StrucT:
 		else:
 			return self.add_member(dtype, size, offset, name)
 
+	def __hash__(self) -> int:
+		return self.id
+
+	def __eq__(self, o: object) -> bool:
+		return hash(self) == hash(o)
+
 
 class StrucI:
 	''' Represent a struct instance. '''
@@ -248,3 +267,9 @@ class StrucI:
 
 	def __repr__(self):
 		return f'<StrucI addr={self.addr}, struc_t={self.struc_t}, data={dumps(self.members, default=str, indent=4)}>'
+
+	def __hash__(self) -> int:
+		return hash(self.struc_t) ^ self.addr
+
+	def __eq__(self, o: object) -> bool:
+		return type(o) is StrucI and self.struc_t == o.struc_t and self.addr == o.addr
