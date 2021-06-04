@@ -40,6 +40,9 @@
                                 <a class="variable" href="#MemberT.member">member</a>
                         </li>
                         <li>
+                                <a class="variable" href="#MemberT.struct">struct</a>
+                        </li>
+                        <li>
                                 <a class="variable" href="#MemberT.id">id</a>
                         </li>
                         <li>
@@ -92,6 +95,9 @@
                         </li>
                         <li>
                                 <a class="function" href="#StrucT.member_at_offset">member_at_offset</a>
+                        </li>
+                        <li>
+                                <a class="function" href="#StrucT.member_starting_at_offset">member_starting_at_offset</a>
                         </li>
                         <li>
                                 <a class="function" href="#StrucT.create_struc">create_struc</a>
@@ -170,10 +176,12 @@
 <span class="k">class</span> <span class="nc">MemberT</span><span class="p">:</span>
 	<span class="sd">&#39;&#39;&#39; Represent a member of a struct type. &#39;&#39;&#39;</span>
 
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">):</span>
 		<span class="sd">&#39;&#39;&#39; Init with an `ida_struct.member_t` object. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">member_t</span><span class="p">,</span> <span class="s1">&#39;Invalid member!&#39;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span> <span class="o">=</span> <span class="n">member</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">struct</span> <span class="o">=</span> <span class="n">struct</span>
+		<span class="sd">&#39;&#39;&#39; The struct type containing this member. &#39;&#39;&#39;</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -229,6 +237,12 @@
 			<span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">method</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Cannot find method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">, it is likely not supported.&#39;</span>
 			<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">method</span><span class="p">)()</span>
 
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
 	<span class="k">def</span> <span class="nf">instance_at_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">):</span>
 		<span class="sd">&#39;&#39;&#39; Get the value from a struct at the given address.</span>
 <span class="sd">		</span>
@@ -274,7 +288,7 @@
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MemberT</span><span class="p">]:</span>
 		<span class="sd">&#39;&#39;&#39; All member types of struct. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="p">[</span><span class="n">MemberT</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">MemberT</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -288,12 +302,17 @@
 	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Get a member type by name. &#39;&#39;&#39;</span>
 		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
 
 	<span class="k">def</span> <span class="nf">member_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Get a member type by offset. &#39;&#39;&#39;</span>
 		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_id</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
-		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="k">def</span> <span class="nf">member_starting_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39;  Get a member type by offset, member must start at offset. &#39;&#39;&#39;</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">member</span> <span class="k">if</span> <span class="n">member</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span> <span class="o">==</span> <span class="n">offset</span> <span class="k">else</span> <span class="kc">None</span>
 
 	<span class="c1"># MUTATING METHODS</span>
 	<span class="c1"># These methods do not check alignments.</span>
@@ -356,6 +375,12 @@
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
 
 <span class="k">class</span> <span class="nc">StrucI</span><span class="p">:</span>
 	<span class="sd">&#39;&#39;&#39; Represent a struct instance. &#39;&#39;&#39;</span>
@@ -402,6 +427,12 @@
 
 	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;StrucI addr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="si">}</span><span class="s1">, struc_t=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="si">}</span><span class="s1">, data=</span><span class="si">{</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
+
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="p">)</span> <span class="o">^</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="ow">is</span> <span class="n">StrucI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">struc_t</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">addr</span>
 </pre></div>
 
         </details>
@@ -421,10 +452,12 @@
             <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">MemberT</span><span class="p">:</span>
 	<span class="sd">&#39;&#39;&#39; Represent a member of a struct type. &#39;&#39;&#39;</span>
 
-	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">):</span>
 		<span class="sd">&#39;&#39;&#39; Init with an `ida_struct.member_t` object. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">member_t</span><span class="p">,</span> <span class="s1">&#39;Invalid member!&#39;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span> <span class="o">=</span> <span class="n">member</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">struct</span> <span class="o">=</span> <span class="n">struct</span>
+		<span class="sd">&#39;&#39;&#39; The struct type containing this member. &#39;&#39;&#39;</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -480,6 +513,12 @@
 			<span class="k">assert</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">method</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Cannot find method </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">, it is likely not supported.&#39;</span>
 			<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">method</span><span class="p">)()</span>
 
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
 	<span class="k">def</span> <span class="nf">instance_at_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struct_addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">):</span>
 		<span class="sd">&#39;&#39;&#39; Get the value from a struct at the given address.</span>
 <span class="sd">		</span>
@@ -508,15 +547,17 @@
                                         <div class="attr function"><a class="headerlink" href="#MemberT.__init__">#&nbsp;&nbsp</a>
 
         
-            <span class="name">MemberT</span><span class="signature">(member: &#39;ida_struct.member_t&#39;)</span>
+            <span class="name">MemberT</span><span class="signature">(member: &#39;ida_struct.member_t&#39;, struct: <a href="#StrucT">ida_scripts.struc.StrucT</a>)</span>
     </div>
 
                 <details>
             <summary>View Source</summary>
-            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">):</span>
+            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span><span class="p">,</span> <span class="n">struct</span><span class="p">:</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">):</span>
 		<span class="sd">&#39;&#39;&#39; Init with an `ida_struct.member_t` object. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="nb">type</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="ow">is</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">member_t</span><span class="p">,</span> <span class="s1">&#39;Invalid member!&#39;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">:</span> <span class="s1">&#39;ida_struct.member_t&#39;</span> <span class="o">=</span> <span class="n">member</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">struct</span> <span class="o">=</span> <span class="n">struct</span>
+		<span class="sd">&#39;&#39;&#39; The struct type containing this member. &#39;&#39;&#39;</span>
 </pre></div>
 
         </details>
@@ -533,6 +574,17 @@
     </div>
 
     
+
+                            </div>
+                            <div id="MemberT.struct" class="classattr">
+                                            <div class="attr variable"><a class="headerlink" href="#MemberT.struct">#&nbsp;&nbsp</a>
+
+        <span class="name">struct</span>
+    </div>
+
+            <div class="docstring"><p>The struct type containing this member.</p>
+</div>
+
 
                             </div>
                             <div id="MemberT.id" class="classattr">
@@ -741,7 +793,7 @@ A pointer to an instance of the struct.</li>
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">members</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MemberT</span><span class="p">]:</span>
 		<span class="sd">&#39;&#39;&#39; All member types of struct. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="p">[</span><span class="n">MemberT</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">MemberT</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="o">.</span><span class="n">members</span><span class="p">]</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -755,12 +807,17 @@ A pointer to an instance of the struct.</li>
 	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Get a member type by name. &#39;&#39;&#39;</span>
 		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
 
 	<span class="k">def</span> <span class="nf">member_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Get a member type by offset. &#39;&#39;&#39;</span>
 		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_id</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
-		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="k">def</span> <span class="nf">member_starting_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39;  Get a member type by offset, member must start at offset. &#39;&#39;&#39;</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">member</span> <span class="k">if</span> <span class="n">member</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span> <span class="o">==</span> <span class="n">offset</span> <span class="k">else</span> <span class="kc">None</span>
 
 	<span class="c1"># MUTATING METHODS</span>
 	<span class="c1"># These methods do not check alignments.</span>
@@ -822,6 +879,12 @@ A pointer to an instance of the struct.</li>
 			<span class="k">return</span> <span class="n">new_member</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
 </pre></div>
 
         </details>
@@ -965,12 +1028,35 @@ A pointer to an instance of the struct.</li>
             <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">member_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Get a member type by offset. &#39;&#39;&#39;</span>
 		<span class="n">member</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_by_id</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">offset</span><span class="p">))</span>
-		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">MemberT</span><span class="p">(</span><span class="n">member</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">member</span> <span class="k">else</span> <span class="kc">None</span>
 </pre></div>
 
         </details>
 
             <div class="docstring"><p>Get a member type by offset.</p>
+</div>
+
+
+                            </div>
+                            <div id="StrucT.member_starting_at_offset" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#StrucT.member_starting_at_offset">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">member_starting_at_offset</span><span class="signature">(self, offset: int) -&gt; bool</span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">member_starting_at_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39;  Get a member type by offset, member must start at offset. &#39;&#39;&#39;</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">member</span> <span class="k">if</span> <span class="n">member</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span> <span class="o">==</span> <span class="n">offset</span> <span class="k">else</span> <span class="kc">None</span>
+</pre></div>
+
+        </details>
+
+            <div class="docstring"><p>Get a member type by offset, member must start at offset.</p>
 </div>
 
 
@@ -1202,6 +1288,12 @@ A pointer to an instance of the struct.</li>
 
 	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;&lt;StrucI addr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">addr</span><span class="si">}</span><span class="s1">, struc_t=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="si">}</span><span class="s1">, data=</span><span class="si">{</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s1">&gt;&#39;</span>
+
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span><span class="p">)</span> <span class="o">^</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="ow">is</span> <span class="n">StrucI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">struc_t</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">addr</span>
 </pre></div>
 
         </details>

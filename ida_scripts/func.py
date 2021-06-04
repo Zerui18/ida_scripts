@@ -8,8 +8,8 @@ try:
 	import ida_hexrays
 	import ida_lines
 	import ida_pro
-	import networkx as nx
 except: pass
+import networkx as nx
 from typing import *
 from .utils import *
 from .struc import *
@@ -196,8 +196,13 @@ class CItem:
 
 		Returns results as a list of `List[List[CItem]]`, the outermost list representing the unique matches, each inner `List[List[CItem]]` representing a match.
 		Example of a match:
+
 		Query: `{ op : A, children: [{ op : B}, { op : C }]}`
+
 		A Match: `[[A], [B, C]]`
+
+		Returns: `[[[A], [B, C]], ...]`
+
 		'''
 
 		results = []
@@ -267,26 +272,28 @@ class CItem:
 	def __eq__(self, other: 'CItem'):
 		return hash(self) == hash(other)
 
-class GraphBuilder(ida_hexrays.ctree_parentee_t):
-	''' Utility class used to build the decompiled items graph. '''
+try:
+	class GraphBuilder(ida_hexrays.ctree_parentee_t):
+		''' Utility class used to build the decompiled items graph. '''
 
-	def __init__(self):
-		ida_hexrays.ctree_parentee_t.__init__(self)
-		self.graph = nx.DiGraph()
-	
-	def add_item(self, item: 'ida_hexrays.citem_t', type: str):
-		parent = self.parents.back()
-		item = CItem(item, self.graph)
-		self.graph.add_node(item, type=type)
-		if parent:
-			self.graph.add_edge(CItem(parent, self.graph), item)
-		return 0
+		def __init__(self):
+			ida_hexrays.ctree_parentee_t.__init__(self)
+			self.graph = nx.DiGraph()
+		
+		def add_item(self, item: 'ida_hexrays.citem_t', type: str):
+			parent = self.parents.back()
+			item = CItem(item, self.graph)
+			self.graph.add_node(item, type=type)
+			if parent:
+				self.graph.add_edge(CItem(parent, self.graph), item)
+			return 0
 
-	def visit_insn(self, i: 'ida_hexrays.cinsn_t'):
-		return self.add_item(i, 'insn')
+		def visit_insn(self, i: 'ida_hexrays.cinsn_t'):
+			return self.add_item(i, 'insn')
 
-	def visit_expr(self, e: 'ida_hexrays.cexpr_t'):
-		return self.add_item(e, 'expr')
+		def visit_expr(self, e: 'ida_hexrays.cexpr_t'):
+			return self.add_item(e, 'expr')
+except: pass
 
 @auto_repr(['original'])
 class CFunc:

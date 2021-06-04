@@ -24,6 +24,22 @@ This is just an overview, please check the documentations below for the full set
 		- `StrucI`
 			- Get `members`
 			- Subscript access for member value
+- `func`
+	- `Func`
+		- Find by name, ea
+		- Property getters
+		- Decompile to yield `CFunc`
+	- `CFunc`
+		- Get psuedocode
+		- Get body represented as a networkx.DiGraph (really just a tree)
+			- Each node is a `CItem`
+	- `CItem`
+		- Property accessors
+			- Customised convenient accessors such as
+				- Getting the struct / member being accessed
+				- Getting the number 
+		- DFS search for node with lambda condition
+		- Subtree query for more complex searches
 - `module`
 	- `Module`
 		- Enumerate all modules
