@@ -5,7 +5,10 @@ try:
 	import ida_struct
 	import ida_idaapi
 	import ida_bytes
+	import idc
 except: pass
+
+import re
 from json import dumps
 from typing import *
 
@@ -49,6 +52,10 @@ class MemberT:
 	def size(self) -> int:
 		''' Member size in bytes. '''
 		return ida_struct.get_member_size(self.member)
+
+	@property
+	def is_gap(self) -> bool:
+		return str(self.dtype)[:4] in ['char', '_BYT'] and self.name.startswith('gap')
 
 	def instance_at(self, addr: Pointer) -> Union[Pointer, int]:
 		''' Get the value from the given address.
@@ -105,10 +112,16 @@ class StrucT:
 	''' Represent a struct type. '''
 
 	@staticmethod
-	def find_struc(name: str) -> 'StrucT':
+	def find(name: str) -> 'StrucT':
 		''' Find struct type by name. '''
 		id = ida_struct.get_struc_id(name)
-		return StrucT(ida_struct.get_struc(id)) if id else None
+		return StrucT(ida_struct.get_struc(id)) if id != ida_idaapi.BADADDR else None
+
+	@staticmethod
+	def add_struc(name: str) -> 'StrucT':
+		''' Create and return an empty struct. '''
+		id = ida_struct.add_struc(ida_idaapi.BADADDR, name, False)
+		return StrucT(ida_struct.get_struc(id)) if id != ida_idaapi.BADADDR else None
 
 	def __init__(self, struc: 'ida_struct.struc_t'):
 		''' Init with an `ida_struct.struc_t` object. '''
@@ -164,25 +177,35 @@ class StrucT:
 		struct = ida_struct.get_struc(tid)
 		return StrucT(struct)
 
-	def add_member(self, dtype: int, offset: int, size: int, name: str = None) -> MemberT:
-		''' Create and return a new member in this struct type. '''
-		if not name:
-			name = f'anonymous_{to_hex(offset)}'
-		result = ida_struct.add_struc_member(self.struc, name, offset, dtype, None, size)
+	def add_member(self, declaration: str, offset: int) -> MemberT:
+		''' Create and return a new member in this struct type.
+
+		`declaration` should be like `TYPE_NAME NAME[SIZE]` (Array is optional).
+		'''
+		# parse decl
+		tinfo, name = parse_declaration(declaration)
+		size = tinfo.get_size()
+		# create a bytes member of equivalent size
+		result = ida_struct.add_struc_member(self.struc, name, offset, idc.FF_BYTE, None, size)
 		assert result == 0, f'Failed to add member: {STRUC_ERROR_MEMBER_DESCRIPTIONS[result]}'
-		return self[name]
+		member = self[name]
+		# apply the correct tinfo
+		ida_struct.set_member_tinfo(self.struc, member.member, 0, tinfo, 2) # SET_MEMTI_COMPATIBLE 2
+		return member
 
 	def add_gap(self, offset: int, size: int) -> MemberT:
 		''' Create and return a new member representing a bytes gap. '''
 		name = f'gap{to_hex(offset)}'
-		return self.add_member(ida_bytes.byte_flag(), offset, size, name)
+		return self.add_member(f'_BYTE {name}[{size}]', offset)
 
 	def delete_member(self, member: MemberT) -> bool:
 		''' Delete a given member. '''
 		return ida_struct.del_struc_member(self.struc, member.offset)
 
-	def add_member_auto(self, dtype: int, offset: int, size: int, name: str = None) -> MemberT:
+	def add_member_auto(self, declaration: str, offset: int) -> MemberT:
 		''' Create and return a new member in this struct type, automatically reworking gaps.
+
+		`declaration` should be like `TYPE_NAME NAME[SIZE]` (Array is optional).
 
 		A gap is recognised by:
 		1. Is a single or array of 'char' or '_BYTE'.
@@ -192,11 +215,12 @@ class StrucT:
 
 		'''
 		# check if offset's in a gap
+
 		member = self.member_at_offset(offset)
 		if member:
 			# check if member's a gap
 			# must be byte (one or array) with name starting with 'gap'
-			assert str(member.dtype)[:4] in ['char', '_BYT'] and member.name.startswith('gap'), 'Failed to add member: offset is occupied by a non-gap member.'
+			assert member.is_gap, 'Failed to add member: offset is occupied by a non-gap member.'
 			# recreate gap(s)
 			gap_start = member.offset
 			gap_end = member.offset + member.size
@@ -206,14 +230,14 @@ class StrucT:
 			if offset > gap_start:
 				self.add_gap(gap_start, offset - gap_start)
 			# 3. create member
-			new_member = self.add_member(dtype, offset, size, name)
+			new_member = self.add_member(declaration, offset)
 			# 4. create higher gap if necessary
 			higher_gap_start = new_member.offset + new_member.size
 			if higher_gap_start < gap_end:
 				self.add_gap(higher_gap_start, gap_end - higher_gap_start)
 			return new_member
 		else:
-			return self.add_member(dtype, size, offset, name)
+			return self.add_member(declaration, offset)
 
 	def __hash__(self) -> int:
 		return self.id
@@ -273,3 +297,20 @@ class StrucI:
 
 	def __eq__(self, o: object) -> bool:
 		return type(o) is StrucI and self.struc_t == o.struc_t and self.addr == o.addr
+
+def parse_declaration(declaration):
+	m = re.search(r"^(\w+[ *]+)(\w+)(\[(\d+)\])?$", declaration)
+	assert m, 'Member declaration should be like `TYPE_NAME NAME[SIZE]` (Array is optional)'
+
+	type_name, field_name, _, arr_size = m.groups()
+	assert not field_name[0].isdigit(), 'Bad field name'
+
+	result = idc.parse_decl(type_name, 0)
+	assert result, 'Failed to parse member type. It should be like `TYPE_NAME NAME[SIZE]` (Array is optional)'
+
+	_, tp, fld = result
+	tinfo = ida_typeinf.tinfo_t()
+	tinfo.deserialize(ida_typeinf.cvar.idati, tp, fld, None)
+	if arr_size:
+		assert tinfo.create_array(tinfo, int(arr_size))
+	return tinfo, field_name

@@ -22,7 +22,7 @@ class Module:
 		return modules
 
 	@staticmethod
-	def find_module(name: str) -> 'Module':
+	def find(name: str) -> 'Module':
 		modules = Module.all_modules()
 		for module in modules:
 			if module.name.endswith(name):

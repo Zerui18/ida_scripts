@@ -53,9 +53,12 @@ def to_hex(n: int) -> str:
 def get_properties(obj: object) -> Dict[str, Any]:
 	attrs = {}
 	for attr in dir(obj):
-		val = getattr(obj, attr)
-		if not callable(val):
-			attrs[attr] = val
+		try:
+			val = getattr(obj, attr)
+			if not callable(val):
+				attrs[attr] = val
+		except Exception as e:
+			attrs[attr] = f'[Failed] {e}'
 	return attrs
 
 def print_properties(obj: object):

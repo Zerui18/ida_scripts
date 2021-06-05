@@ -56,16 +56,19 @@ class CItem:
 	def accessed_struct(self) -> StrucT:
 		''' Find and return the `StrucT` accessed by this memptr/memref operation. '''
 		assert self.op_id in [ida_hexrays.cot_memptr, ida_hexrays.cot_memref], 'Op is not memptr or memref.'
-		struct_tinfo = self.item.cexpr.x.type.get_pointed_object()
-		return StrucT.find_struc(str(struct_tinfo))
+		if self.op_id == idaapi.cot_memptr:
+			struct_tinfo = self.item.cexpr.x.type.get_pointed_object()
+		elif self.op_id == idaapi.cot_memref:
+			struct_tinfo = self.item.cexpr.x.type
+		return StrucT.find(str(struct_tinfo))
 
 	@property
 	def accessed_struct_member(self) -> MemberT:
 		''' Find and return the `MemberT` accessed by this memptr/memref operation. '''
 		assert self.op_id in [ida_hexrays.cot_memptr, ida_hexrays.cot_memref], 'Op is not memptr or memref.'
-		struct_tinfo = self.item.cexpr.x.type.get_pointed_object()
+		struct = self.accessed_struct
 		member_offset = self.item.cexpr.m
-		return StrucT.find_struc(str(struct_tinfo)).member_at_offset(member_offset)
+		return struct.member_at_offset(member_offset)
 
 	@property
 	def called_function(self) -> 'Func':
@@ -137,16 +140,15 @@ class CItem:
 	@property
 	def parent(self) -> 'CItem':
 		''' The parent of this item. '''
-		return next(self.graph.predecessors(self))
+		try:
+			return next(self.graph.predecessors(self))
+		except:
+			return None
 
 	@property
 	def parent_expression(self) -> 'CItem':
 		''' Find and return the parent expression. '''
-		node = self.parent
-		while node:
-			if node.op == 'expr':
-				return node
-			node = node.parent
+		return self.parent_where(lambda parent: parent.op == ida_hexrays.cit_expr)
 
 	def child_where(self, condition: Callable[['CItem'], bool]) -> 'CItem':
 		''' Preorder dfs search for the first child meeting the condition. '''
@@ -173,6 +175,13 @@ class CItem:
 			except:
 				break
 		return nodes
+
+	def parent_where(self, condition: Callable[['CItem'], bool]) -> 'CItem':
+		parent = self.parent
+		while parent:
+			if condition(parent):
+				return parent
+			parent = parent.parent
 
 	def subtree_search_strict(self, query: Dict[str, Any]) -> List[List[List['CItem']]]:
 		''' Perform a dfs tree search with the specified query.
@@ -215,14 +224,14 @@ class CItem:
 				result = [[]]
 
 			match = True
-			# 1. check condition, if exists
-			if 'condition' in query:
-				match = match and query['condition'](item)
-			# 2. check each of the other attributes
+			# 1. check each of the other attributes
 			attrs = { 'op' }
 			for attr in attrs:
 				if attr in query:
 					match = match and query[attr] == getattr(item, attr)
+			# 2. check condition, if exists
+			if match and 'condition' in query:
+				match = match and query['condition'](item)
 
 			# always try to match deeper subtrees
 			if index == 0:
@@ -264,7 +273,6 @@ class CItem:
 
 		recursive_search(self, query)
 		return results
-
 
 	def __hash__(self):
 		return self.item.obj_id
@@ -325,7 +333,7 @@ class Func:
 	''' Represent a function. '''
 
 	@staticmethod
-	def find_func(name: str) -> 'Func':
+	def find(name: str) -> 'Func':
 		''' Find function by name. '''
 		for addr in idautils.Functions():
 			if ida_name.get_ea_name(addr) == name:
@@ -362,6 +370,18 @@ class Func:
 	def size(self) -> int:
 		''' Function size. '''
 		return self.func.size()
+
+	@property
+	def tif(self) -> 'ida_typeinf.tinfo_t':
+		tif = ida_typeinf.tinfo_t()
+		return tif if idaapi.get_tinfo(tif, self.func.start_ea) else None
+
+	@property
+	def arguments(self) -> Dict[str, 'ida_typeinf.tinfo_t']:
+		''' Return a `dict` of argument name to type info. '''
+		func_data = idaapi.func_type_data_t()
+		self.tif.get_func_details(func_data)
+		return { arg.name:arg.type for arg in func_data }
 
 	def decompile(self) -> CFunc:
 		''' Decompile this function. '''

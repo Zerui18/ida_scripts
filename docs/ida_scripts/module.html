@@ -40,7 +40,7 @@
                                 <a class="function" href="#Module.all_modules">all_modules</a>
                         </li>
                         <li>
-                                <a class="function" href="#Module.find_module">find_module</a>
+                                <a class="function" href="#Module.find">find</a>
                         </li>
                 </ul>
 
@@ -89,7 +89,7 @@
 		<span class="k">return</span> <span class="n">modules</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
 		<span class="n">modules</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">all_modules</span><span class="p">()</span>
 		<span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -128,7 +128,7 @@
 		<span class="k">return</span> <span class="n">modules</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
 		<span class="n">modules</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">all_modules</span><span class="p">()</span>
 		<span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
@@ -193,19 +193,19 @@
 
 
                             </div>
-                            <div id="Module.find_module" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Module.find_module">#&nbsp;&nbsp</a>
+                            <div id="Module.find" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#Module.find">#&nbsp;&nbsp</a>
 
                 <div class="decorator">@staticmethod</div>
 
             <span class="def">def</span>
-            <span class="name">find_module</span><span class="signature">(name: str) -&gt; <a href="#Module">ida_scripts.module.Module</a></span>:
+            <span class="name">find</span><span class="signature">(name: str) -&gt; <a href="#Module">ida_scripts.module.Module</a></span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
 		<span class="n">modules</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">all_modules</span><span class="p">()</span>
 		<span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>

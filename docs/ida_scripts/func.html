@@ -85,6 +85,9 @@
                                 <a class="function" href="#CItem.children_where">children_where</a>
                         </li>
                         <li>
+                                <a class="function" href="#CItem.parent_where">parent_where</a>
+                        </li>
+                        <li>
                                 <a class="function" href="#CItem.subtree_search_strict">subtree_search_strict</a>
                         </li>
                 </ul>
@@ -121,7 +124,7 @@
                                 <a class="function" href="#Func.__init__">Func</a>
                         </li>
                         <li>
-                                <a class="function" href="#Func.find_func">find_func</a>
+                                <a class="function" href="#Func.find">find</a>
                         </li>
                         <li>
                                 <a class="function" href="#Func.func_at">func_at</a>
@@ -137,6 +140,12 @@
                         </li>
                         <li>
                                 <a class="variable" href="#Func.size">size</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Func.tif">tif</a>
+                        </li>
+                        <li>
+                                <a class="variable" href="#Func.arguments">arguments</a>
                         </li>
                         <li>
                                 <a class="function" href="#Func.decompile">decompile</a>
@@ -222,16 +231,19 @@
 	<span class="k">def</span> <span class="nf">accessed_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrucT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the `StrucT` accessed by this memptr/memref operation. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">,</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">],</span> <span class="s1">&#39;Op is not memptr or memref.&#39;</span>
-		<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find_struc</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="o">==</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">:</span>
+			<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="o">==</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">:</span>
+			<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">accessed_struct_member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the `MemberT` accessed by this memptr/memref operation. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">,</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">],</span> <span class="s1">&#39;Op is not memptr or memref.&#39;</span>
-		<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
+		<span class="n">struct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessed_struct</span>
 		<span class="n">member_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">m</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find_struc</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">member_offset</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">member_offset</span><span class="p">)</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">called_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
@@ -303,16 +315,15 @@
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; The parent of this item. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">parent_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the parent expression. &#39;&#39;&#39;</span>
-		<span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
-		<span class="k">while</span> <span class="n">node</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;expr&#39;</span><span class="p">:</span>
-				<span class="k">return</span> <span class="n">node</span>
-			<span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_where</span><span class="p">(</span><span class="k">lambda</span> <span class="n">parent</span><span class="p">:</span> <span class="n">parent</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cit_expr</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">child_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Preorder dfs search for the first child meeting the condition. &#39;&#39;&#39;</span>
@@ -339,6 +350,13 @@
 			<span class="k">except</span><span class="p">:</span>
 				<span class="k">break</span>
 		<span class="k">return</span> <span class="n">nodes</span>
+
+	<span class="k">def</span> <span class="nf">parent_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">while</span> <span class="n">parent</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">parent</span>
+			<span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
 
 	<span class="k">def</span> <span class="nf">subtree_search_strict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="s1">&#39;CItem&#39;</span><span class="p">]]]:</span>
 		<span class="sd">&#39;&#39;&#39; Perform a dfs tree search with the specified query.</span>
@@ -381,14 +399,14 @@
 				<span class="n">result</span> <span class="o">=</span> <span class="p">[[]]</span>
 
 			<span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
-			<span class="c1"># 1. check condition, if exists</span>
-			<span class="k">if</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
-				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
-			<span class="c1"># 2. check each of the other attributes</span>
+			<span class="c1"># 1. check each of the other attributes</span>
 			<span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;op&#39;</span> <span class="p">}</span>
 			<span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
 					<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+			<span class="c1"># 2. check condition, if exists</span>
+			<span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
 
 			<span class="c1"># always try to match deeper subtrees</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -430,7 +448,6 @@
 
 		<span class="n">recursive_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">results</span>
-
 
 	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">obj_id</span>
@@ -491,7 +508,7 @@
 	<span class="sd">&#39;&#39;&#39; Represent a function. &#39;&#39;&#39;</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_func</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find function by name. &#39;&#39;&#39;</span>
 		<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">idautils</span><span class="o">.</span><span class="n">Functions</span><span class="p">():</span>
 			<span class="k">if</span> <span class="n">ida_name</span><span class="o">.</span><span class="n">get_ea_name</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
@@ -528,6 +545,18 @@
 	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Function size. &#39;&#39;&#39;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">tif</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">:</span>
+		<span class="n">tif</span> <span class="o">=</span> <span class="n">ida_typeinf</span><span class="o">.</span><span class="n">tinfo_t</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">tif</span> <span class="k">if</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">get_tinfo</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">start_ea</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Return a `dict` of argument name to type info. &#39;&#39;&#39;</span>
+		<span class="n">func_data</span> <span class="o">=</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">func_type_data_t</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tif</span><span class="o">.</span><span class="n">get_func_details</span><span class="p">(</span><span class="n">func_data</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">{</span> <span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">arg</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">func_data</span> <span class="p">}</span>
 
 	<span class="k">def</span> <span class="nf">decompile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CFunc</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Decompile this function. &#39;&#39;&#39;</span>
@@ -592,16 +621,19 @@
 	<span class="k">def</span> <span class="nf">accessed_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrucT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the `StrucT` accessed by this memptr/memref operation. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">,</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">],</span> <span class="s1">&#39;Op is not memptr or memref.&#39;</span>
-		<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find_struc</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="o">==</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">:</span>
+			<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="o">==</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">:</span>
+			<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">accessed_struct_member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the `MemberT` accessed by this memptr/memref operation. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">,</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">],</span> <span class="s1">&#39;Op is not memptr or memref.&#39;</span>
-		<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
+		<span class="n">struct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessed_struct</span>
 		<span class="n">member_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">m</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find_struc</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">member_offset</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">member_offset</span><span class="p">)</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">called_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
@@ -673,16 +705,15 @@
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; The parent of this item. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">parent_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the parent expression. &#39;&#39;&#39;</span>
-		<span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
-		<span class="k">while</span> <span class="n">node</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;expr&#39;</span><span class="p">:</span>
-				<span class="k">return</span> <span class="n">node</span>
-			<span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_where</span><span class="p">(</span><span class="k">lambda</span> <span class="n">parent</span><span class="p">:</span> <span class="n">parent</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cit_expr</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">child_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Preorder dfs search for the first child meeting the condition. &#39;&#39;&#39;</span>
@@ -709,6 +740,13 @@
 			<span class="k">except</span><span class="p">:</span>
 				<span class="k">break</span>
 		<span class="k">return</span> <span class="n">nodes</span>
+
+	<span class="k">def</span> <span class="nf">parent_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">while</span> <span class="n">parent</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">parent</span>
+			<span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
 
 	<span class="k">def</span> <span class="nf">subtree_search_strict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="s1">&#39;CItem&#39;</span><span class="p">]]]:</span>
 		<span class="sd">&#39;&#39;&#39; Perform a dfs tree search with the specified query.</span>
@@ -751,14 +789,14 @@
 				<span class="n">result</span> <span class="o">=</span> <span class="p">[[]]</span>
 
 			<span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
-			<span class="c1"># 1. check condition, if exists</span>
-			<span class="k">if</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
-				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
-			<span class="c1"># 2. check each of the other attributes</span>
+			<span class="c1"># 1. check each of the other attributes</span>
 			<span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;op&#39;</span> <span class="p">}</span>
 			<span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
 					<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+			<span class="c1"># 2. check condition, if exists</span>
+			<span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
 
 			<span class="c1"># always try to match deeper subtrees</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -800,7 +838,6 @@
 
 		<span class="n">recursive_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">results</span>
-
 
 	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">obj_id</span>
@@ -1060,6 +1097,32 @@
 
 
                             </div>
+                            <div id="CItem.parent_where" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#CItem.parent_where">#&nbsp;&nbsp</a>
+
+        
+            <span class="def">def</span>
+            <span class="name">parent_where</span><span class="signature">(
+    self,
+    condition: collections.abc.Callable[<a href="#CItem">ida_scripts.func.CItem</a>, bool]
+) -&gt; <a href="#CItem">ida_scripts.func.CItem</a></span>:
+    </div>
+
+                <details>
+            <summary>View Source</summary>
+            <div class="codehilite"><pre><span></span>	<span class="k">def</span> <span class="nf">parent_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">while</span> <span class="n">parent</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">parent</span>
+			<span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
+</pre></div>
+
+        </details>
+
+    
+
+                            </div>
                             <div id="CItem.subtree_search_strict" class="classattr">
                                         <div class="attr function"><a class="headerlink" href="#CItem.subtree_search_strict">#&nbsp;&nbsp</a>
 
@@ -1114,14 +1177,14 @@
 				<span class="n">result</span> <span class="o">=</span> <span class="p">[[]]</span>
 
 			<span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
-			<span class="c1"># 1. check condition, if exists</span>
-			<span class="k">if</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
-				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
-			<span class="c1"># 2. check each of the other attributes</span>
+			<span class="c1"># 1. check each of the other attributes</span>
 			<span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;op&#39;</span> <span class="p">}</span>
 			<span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
 					<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+			<span class="c1"># 2. check condition, if exists</span>
+			<span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
 
 			<span class="c1"># always try to match deeper subtrees</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1342,7 +1405,7 @@ Example of a match:</p>
 	<span class="sd">&#39;&#39;&#39; Represent a function. &#39;&#39;&#39;</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_func</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find function by name. &#39;&#39;&#39;</span>
 		<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">idautils</span><span class="o">.</span><span class="n">Functions</span><span class="p">():</span>
 			<span class="k">if</span> <span class="n">ida_name</span><span class="o">.</span><span class="n">get_ea_name</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
@@ -1380,6 +1443,18 @@ Example of a match:</p>
 		<span class="sd">&#39;&#39;&#39; Function size. &#39;&#39;&#39;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
 
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">tif</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">:</span>
+		<span class="n">tif</span> <span class="o">=</span> <span class="n">ida_typeinf</span><span class="o">.</span><span class="n">tinfo_t</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">tif</span> <span class="k">if</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">get_tinfo</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">start_ea</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Return a `dict` of argument name to type info. &#39;&#39;&#39;</span>
+		<span class="n">func_data</span> <span class="o">=</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">func_type_data_t</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tif</span><span class="o">.</span><span class="n">get_func_details</span><span class="p">(</span><span class="n">func_data</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">{</span> <span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">arg</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">func_data</span> <span class="p">}</span>
+
 	<span class="k">def</span> <span class="nf">decompile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CFunc</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Decompile this function. &#39;&#39;&#39;</span>
 		<span class="n">err</span> <span class="o">=</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">hexrays_failure_t</span><span class="p">()</span>
@@ -1416,19 +1491,19 @@ Example of a match:</p>
 
 
                             </div>
-                            <div id="Func.find_func" class="classattr">
-                                        <div class="attr function"><a class="headerlink" href="#Func.find_func">#&nbsp;&nbsp</a>
+                            <div id="Func.find" class="classattr">
+                                        <div class="attr function"><a class="headerlink" href="#Func.find">#&nbsp;&nbsp</a>
 
                 <div class="decorator">@staticmethod</div>
 
             <span class="def">def</span>
-            <span class="name">find_func</span><span class="signature">(name: str) -&gt; <a href="#Func">ida_scripts.func.Func</a></span>:
+            <span class="name">find</span><span class="signature">(name: str) -&gt; <a href="#Func">ida_scripts.func.Func</a></span>:
     </div>
 
                 <details>
             <summary>View Source</summary>
             <div class="codehilite"><pre><span></span>	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_func</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find function by name. &#39;&#39;&#39;</span>
 		<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">idautils</span><span class="o">.</span><span class="n">Functions</span><span class="p">():</span>
 			<span class="k">if</span> <span class="n">ida_name</span><span class="o">.</span><span class="n">get_ea_name</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
@@ -1508,6 +1583,26 @@ Example of a match:</p>
     </div>
 
             <div class="docstring"><p>Function size.</p>
+</div>
+
+
+                            </div>
+                            <div id="Func.tif" class="classattr">
+                                            <div class="attr variable"><a class="headerlink" href="#Func.tif">#&nbsp;&nbsp</a>
+
+        <span class="name">tif</span><span class="annotation">: &#39;ida_typeinf.tinfo_t&#39;</span>
+    </div>
+
+    
+
+                            </div>
+                            <div id="Func.arguments" class="classattr">
+                                            <div class="attr variable"><a class="headerlink" href="#Func.arguments">#&nbsp;&nbsp</a>
+
+        <span class="name">arguments</span><span class="annotation">: Dict[str, ForwardRef(&#39;ida_typeinf.tinfo_t&#39;)]</span>
+    </div>
+
+            <div class="docstring"><p>Return a <code>dict</code> of argument name to type info.</p>
 </div>
 
 

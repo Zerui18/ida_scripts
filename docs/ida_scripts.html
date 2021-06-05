@@ -295,7 +295,10 @@ ida_scripts    </h1>
 	<span class="kn">import</span> <span class="nn">ida_struct</span>
 	<span class="kn">import</span> <span class="nn">ida_idaapi</span>
 	<span class="kn">import</span> <span class="nn">ida_bytes</span>
+	<span class="kn">import</span> <span class="nn">idc</span>
 <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">json</span> <span class="kn">import</span> <span class="n">dumps</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -339,6 +342,10 @@ ida_scripts    </h1>
 	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Member size in bytes. &#39;&#39;&#39;</span>
 		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_member_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">member</span><span class="p">)</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">is_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;char&#39;</span><span class="p">,</span> <span class="s1">&#39;_BYT&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;gap&#39;</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">instance_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Pointer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Pointer</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 		<span class="sd">&#39;&#39;&#39; Get the value from the given address.</span>
@@ -395,10 +402,16 @@ ida_scripts    </h1>
 	<span class="sd">&#39;&#39;&#39; Represent a struct type. &#39;&#39;&#39;</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_struc</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find struct type by name. &#39;&#39;&#39;</span>
 		<span class="nb">id</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc_id</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span> <span class="k">if</span> <span class="nb">id</span> <span class="k">else</span> <span class="kc">None</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span> <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="n">ida_idaapi</span><span class="o">.</span><span class="n">BADADDR</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">add_struc</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;StrucT&#39;</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Create and return an empty struct. &#39;&#39;&#39;</span>
+		<span class="nb">id</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">add_struc</span><span class="p">(</span><span class="n">ida_idaapi</span><span class="o">.</span><span class="n">BADADDR</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="p">(</span><span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc</span><span class="p">(</span><span class="nb">id</span><span class="p">))</span> <span class="k">if</span> <span class="nb">id</span> <span class="o">!=</span> <span class="n">ida_idaapi</span><span class="o">.</span><span class="n">BADADDR</span> <span class="k">else</span> <span class="kc">None</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">struc</span><span class="p">:</span> <span class="s1">&#39;ida_struct.struc_t&#39;</span><span class="p">):</span>
 		<span class="sd">&#39;&#39;&#39; Init with an `ida_struct.struc_t` object. &#39;&#39;&#39;</span>
@@ -454,25 +467,35 @@ ida_scripts    </h1>
 		<span class="n">struct</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">get_struc</span><span class="p">(</span><span class="n">tid</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">StrucT</span><span class="p">(</span><span class="n">struct</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">add_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
-		<span class="sd">&#39;&#39;&#39; Create and return a new member in this struct type. &#39;&#39;&#39;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
-			<span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;anonymous_</span><span class="si">{</span><span class="n">to_hex</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
-		<span class="n">result</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">add_struc_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">add_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">declaration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+		<span class="sd">&#39;&#39;&#39; Create and return a new member in this struct type.</span>
+
+<span class="sd">		`declaration` should be like `TYPE_NAME NAME[SIZE]` (Array is optional).</span>
+<span class="sd">		&#39;&#39;&#39;</span>
+		<span class="c1"># parse decl</span>
+		<span class="n">tinfo</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">parse_declaration</span><span class="p">(</span><span class="n">declaration</span><span class="p">)</span>
+		<span class="n">size</span> <span class="o">=</span> <span class="n">tinfo</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+		<span class="c1"># create a bytes member of equivalent size</span>
+		<span class="n">result</span> <span class="o">=</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">add_struc_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">idc</span><span class="o">.</span><span class="n">FF_BYTE</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 		<span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Failed to add member: </span><span class="si">{</span><span class="n">STRUC_ERROR_MEMBER_DESCRIPTIONS</span><span class="p">[</span><span class="n">result</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+		<span class="c1"># apply the correct tinfo</span>
+		<span class="n">ida_struct</span><span class="o">.</span><span class="n">set_member_tinfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">member</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tinfo</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># SET_MEMTI_COMPATIBLE 2</span>
+		<span class="k">return</span> <span class="n">member</span>
 
 	<span class="k">def</span> <span class="nf">add_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Create and return a new member representing a bytes gap. &#39;&#39;&#39;</span>
 		<span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;gap</span><span class="si">{</span><span class="n">to_hex</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">ida_bytes</span><span class="o">.</span><span class="n">byte_flag</span><span class="p">(),</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;_BYTE </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">[</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">delete_member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">MemberT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Delete a given member. &#39;&#39;&#39;</span>
 		<span class="k">return</span> <span class="n">ida_struct</span><span class="o">.</span><span class="n">del_struc_member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">struc</span><span class="p">,</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
 
-	<span class="k">def</span> <span class="nf">add_member_auto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">add_member_auto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">declaration</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Create and return a new member in this struct type, automatically reworking gaps.</span>
+
+<span class="sd">		`declaration` should be like `TYPE_NAME NAME[SIZE]` (Array is optional).</span>
 
 <span class="sd">		A gap is recognised by:</span>
 <span class="sd">		1. Is a single or array of &#39;char&#39; or &#39;_BYTE&#39;.</span>
@@ -482,11 +505,12 @@ ida_scripts    </h1>
 
 <span class="sd">		&#39;&#39;&#39;</span>
 		<span class="c1"># check if offset&#39;s in a gap</span>
+
 		<span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
 		<span class="k">if</span> <span class="n">member</span><span class="p">:</span>
 			<span class="c1"># check if member&#39;s a gap</span>
 			<span class="c1"># must be byte (one or array) with name starting with &#39;gap&#39;</span>
-			<span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">dtype</span><span class="p">)[:</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;char&#39;</span><span class="p">,</span> <span class="s1">&#39;_BYT&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;gap&#39;</span><span class="p">),</span> <span class="s1">&#39;Failed to add member: offset is occupied by a non-gap member.&#39;</span>
+			<span class="k">assert</span> <span class="n">member</span><span class="o">.</span><span class="n">is_gap</span><span class="p">,</span> <span class="s1">&#39;Failed to add member: offset is occupied by a non-gap member.&#39;</span>
 			<span class="c1"># recreate gap(s)</span>
 			<span class="n">gap_start</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span>
 			<span class="n">gap_end</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">member</span><span class="o">.</span><span class="n">size</span>
@@ -496,14 +520,14 @@ ida_scripts    </h1>
 			<span class="k">if</span> <span class="n">offset</span> <span class="o">&gt;</span> <span class="n">gap_start</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">add_gap</span><span class="p">(</span><span class="n">gap_start</span><span class="p">,</span> <span class="n">offset</span> <span class="o">-</span> <span class="n">gap_start</span><span class="p">)</span>
 			<span class="c1"># 3. create member</span>
-			<span class="n">new_member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+			<span class="n">new_member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 			<span class="c1"># 4. create higher gap if necessary</span>
 			<span class="n">higher_gap_start</span> <span class="o">=</span> <span class="n">new_member</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">new_member</span><span class="o">.</span><span class="n">size</span>
 			<span class="k">if</span> <span class="n">higher_gap_start</span> <span class="o">&lt;</span> <span class="n">gap_end</span><span class="p">:</span>
 				<span class="bp">self</span><span class="o">.</span><span class="n">add_gap</span><span class="p">(</span><span class="n">higher_gap_start</span><span class="p">,</span> <span class="n">gap_end</span> <span class="o">-</span> <span class="n">higher_gap_start</span><span class="p">)</span>
 			<span class="k">return</span> <span class="n">new_member</span>
 		<span class="k">else</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">dtype</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_member</span><span class="p">(</span><span class="n">declaration</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
@@ -563,6 +587,23 @@ ida_scripts    </h1>
 
 	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 		<span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="ow">is</span> <span class="n">StrucI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">struc_t</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">struc_t</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">addr</span> <span class="o">==</span> <span class="n">o</span><span class="o">.</span><span class="n">addr</span>
+
+<span class="k">def</span> <span class="nf">parse_declaration</span><span class="p">(</span><span class="n">declaration</span><span class="p">):</span>
+	<span class="n">m</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^(\w+[ *]+)(\w+)(\[(\d+)\])?$&quot;</span><span class="p">,</span> <span class="n">declaration</span><span class="p">)</span>
+	<span class="k">assert</span> <span class="n">m</span><span class="p">,</span> <span class="s1">&#39;Member declaration should be like `TYPE_NAME NAME[SIZE]` (Array is optional)&#39;</span>
+
+	<span class="n">type_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">arr_size</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+	<span class="k">assert</span> <span class="ow">not</span> <span class="n">field_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">(),</span> <span class="s1">&#39;Bad field name&#39;</span>
+
+	<span class="n">result</span> <span class="o">=</span> <span class="n">idc</span><span class="o">.</span><span class="n">parse_decl</span><span class="p">(</span><span class="n">type_name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="k">assert</span> <span class="n">result</span><span class="p">,</span> <span class="s1">&#39;Failed to parse member type. It should be like `TYPE_NAME NAME[SIZE]` (Array is optional)&#39;</span>
+
+	<span class="n">_</span><span class="p">,</span> <span class="n">tp</span><span class="p">,</span> <span class="n">fld</span> <span class="o">=</span> <span class="n">result</span>
+	<span class="n">tinfo</span> <span class="o">=</span> <span class="n">ida_typeinf</span><span class="o">.</span><span class="n">tinfo_t</span><span class="p">()</span>
+	<span class="n">tinfo</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">ida_typeinf</span><span class="o">.</span><span class="n">cvar</span><span class="o">.</span><span class="n">idati</span><span class="p">,</span> <span class="n">tp</span><span class="p">,</span> <span class="n">fld</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">arr_size</span><span class="p">:</span>
+		<span class="k">assert</span> <span class="n">tinfo</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="n">tinfo</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">arr_size</span><span class="p">))</span>
+	<span class="k">return</span> <span class="n">tinfo</span><span class="p">,</span> <span class="n">field_name</span>
 </pre></div>
 
         </details>
@@ -636,16 +677,19 @@ ida_scripts    </h1>
 	<span class="k">def</span> <span class="nf">accessed_struct</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StrucT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the `StrucT` accessed by this memptr/memref operation. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">,</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">],</span> <span class="s1">&#39;Op is not memptr or memref.&#39;</span>
-		<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find_struc</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="o">==</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">:</span>
+			<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="o">==</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">:</span>
+			<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span>
+		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">accessed_struct_member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MemberT</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the `MemberT` accessed by this memptr/memref operation. &#39;&#39;&#39;</span>
 		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_id</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memptr</span><span class="p">,</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cot_memref</span><span class="p">],</span> <span class="s1">&#39;Op is not memptr or memref.&#39;</span>
-		<span class="n">struct_tinfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">get_pointed_object</span><span class="p">()</span>
+		<span class="n">struct</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accessed_struct</span>
 		<span class="n">member_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">cexpr</span><span class="o">.</span><span class="n">m</span>
-		<span class="k">return</span> <span class="n">StrucT</span><span class="o">.</span><span class="n">find_struc</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">struct_tinfo</span><span class="p">))</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">member_offset</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">struct</span><span class="o">.</span><span class="n">member_at_offset</span><span class="p">(</span><span class="n">member_offset</span><span class="p">)</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">called_function</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
@@ -717,16 +761,15 @@ ida_scripts    </h1>
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">parent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; The parent of this item. &#39;&#39;&#39;</span>
-		<span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">None</span>
 
 	<span class="nd">@property</span>
 	<span class="k">def</span> <span class="nf">parent_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find and return the parent expression. &#39;&#39;&#39;</span>
-		<span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
-		<span class="k">while</span> <span class="n">node</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="s1">&#39;expr&#39;</span><span class="p">:</span>
-				<span class="k">return</span> <span class="n">node</span>
-			<span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_where</span><span class="p">(</span><span class="k">lambda</span> <span class="n">parent</span><span class="p">:</span> <span class="n">parent</span><span class="o">.</span><span class="n">op</span> <span class="o">==</span> <span class="n">ida_hexrays</span><span class="o">.</span><span class="n">cit_expr</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="nf">child_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Preorder dfs search for the first child meeting the condition. &#39;&#39;&#39;</span>
@@ -753,6 +796,13 @@ ida_scripts    </h1>
 			<span class="k">except</span><span class="p">:</span>
 				<span class="k">break</span>
 		<span class="k">return</span> <span class="n">nodes</span>
+
+	<span class="k">def</span> <span class="nf">parent_where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;CItem&#39;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s1">&#39;CItem&#39;</span><span class="p">:</span>
+		<span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span>
+		<span class="k">while</span> <span class="n">parent</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">condition</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+				<span class="k">return</span> <span class="n">parent</span>
+			<span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">parent</span>
 
 	<span class="k">def</span> <span class="nf">subtree_search_strict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="s1">&#39;CItem&#39;</span><span class="p">]]]:</span>
 		<span class="sd">&#39;&#39;&#39; Perform a dfs tree search with the specified query.</span>
@@ -795,14 +845,14 @@ ida_scripts    </h1>
 				<span class="n">result</span> <span class="o">=</span> <span class="p">[[]]</span>
 
 			<span class="n">match</span> <span class="o">=</span> <span class="kc">True</span>
-			<span class="c1"># 1. check condition, if exists</span>
-			<span class="k">if</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
-				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
-			<span class="c1"># 2. check each of the other attributes</span>
+			<span class="c1"># 1. check each of the other attributes</span>
 			<span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;op&#39;</span> <span class="p">}</span>
 			<span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attrs</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
 					<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+			<span class="c1"># 2. check condition, if exists</span>
+			<span class="k">if</span> <span class="n">match</span> <span class="ow">and</span> <span class="s1">&#39;condition&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+				<span class="n">match</span> <span class="o">=</span> <span class="n">match</span> <span class="ow">and</span> <span class="n">query</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">](</span><span class="n">item</span><span class="p">)</span>
 
 			<span class="c1"># always try to match deeper subtrees</span>
 			<span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -844,7 +894,6 @@ ida_scripts    </h1>
 
 		<span class="n">recursive_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">results</span>
-
 
 	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="o">.</span><span class="n">obj_id</span>
@@ -905,7 +954,7 @@ ida_scripts    </h1>
 	<span class="sd">&#39;&#39;&#39; Represent a function. &#39;&#39;&#39;</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_func</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Func&#39;</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Find function by name. &#39;&#39;&#39;</span>
 		<span class="k">for</span> <span class="n">addr</span> <span class="ow">in</span> <span class="n">idautils</span><span class="o">.</span><span class="n">Functions</span><span class="p">():</span>
 			<span class="k">if</span> <span class="n">ida_name</span><span class="o">.</span><span class="n">get_ea_name</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
@@ -942,6 +991,18 @@ ida_scripts    </h1>
 	<span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Function size. &#39;&#39;&#39;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">tif</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">:</span>
+		<span class="n">tif</span> <span class="o">=</span> <span class="n">ida_typeinf</span><span class="o">.</span><span class="n">tinfo_t</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">tif</span> <span class="k">if</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">get_tinfo</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">start_ea</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+	<span class="nd">@property</span>
+	<span class="k">def</span> <span class="nf">arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;ida_typeinf.tinfo_t&#39;</span><span class="p">]:</span>
+		<span class="sd">&#39;&#39;&#39; Return a `dict` of argument name to type info. &#39;&#39;&#39;</span>
+		<span class="n">func_data</span> <span class="o">=</span> <span class="n">idaapi</span><span class="o">.</span><span class="n">func_type_data_t</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tif</span><span class="o">.</span><span class="n">get_func_details</span><span class="p">(</span><span class="n">func_data</span><span class="p">)</span>
+		<span class="k">return</span> <span class="p">{</span> <span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">:</span><span class="n">arg</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">func_data</span> <span class="p">}</span>
 
 	<span class="k">def</span> <span class="nf">decompile</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CFunc</span><span class="p">:</span>
 		<span class="sd">&#39;&#39;&#39; Decompile this function. &#39;&#39;&#39;</span>
@@ -988,7 +1049,7 @@ ida_scripts    </h1>
 		<span class="k">return</span> <span class="n">modules</span>
 
 	<span class="nd">@staticmethod</span>
-	<span class="k">def</span> <span class="nf">find_module</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Module&#39;</span><span class="p">:</span>
 		<span class="n">modules</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">all_modules</span><span class="p">()</span>
 		<span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">modules</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
